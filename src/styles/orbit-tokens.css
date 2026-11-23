@@ -1,0 +1,223 @@
+:root {
+    --orbit-color-background: #ffffff;
+    --orbit-color-surface: #f7f7f8;
+    --orbit-color-text: #111827;
+    --orbit-color-accent: #111827;
+    --orbit-color-border: #e5e7eb;
+    --orbit-font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --orbit-font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    --orbit-container-max-width: 72rem;
+    --orbit-section-spacing-y: 4rem;
+    --orbit-radius-base: 0.5rem;
+    --orbit-radius-lg: 0.75rem;
+    --orbit-radius-button: 0.5rem;
+    --orbit-border-width: 1px;
+    --orbit-card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06);
+
+    /* Legacy hub-* aliases mapped to canonical --orbit-* tokens */
+    --hub-bg: var(--orbit-color-background);
+    --hub-surface: var(--orbit-color-surface);
+    --hub-text: var(--orbit-color-text);
+    --hub-primary: var(--orbit-color-accent);
+    --hub-secondary: var(--orbit-color-accent);
+    --hub-border: var(--orbit-color-border);
+    --hub-font: var(--orbit-font-body);
+    --hub-font-heading: var(--orbit-font-heading);
+}
+
+[data-orbit-theme="clean"] {
+    --orbit-container-max-width: 72rem;
+    --orbit-section-spacing-y: 4rem;
+    --orbit-radius-base: 0.5rem;
+    --orbit-radius-lg: 0.75rem;
+    --orbit-radius-button: 0.5rem;
+    --orbit-border-width: 1px;
+}
+
+[data-orbit-theme="editorial"] {
+    --orbit-container-max-width: 68rem;
+    --orbit-section-spacing-y: 5.5rem;
+    --orbit-radius-base: 0.125rem;
+    --orbit-radius-lg: 0.25rem;
+    --orbit-radius-button: 0rem;
+    --orbit-border-width: 1px;
+    --orbit-card-shadow: none;
+}
+
+[data-orbit-theme="clinical"] {
+    --orbit-container-max-width: 76rem;
+    --orbit-section-spacing-y: 3.5rem;
+    --orbit-radius-base: 0.75rem;
+    --orbit-radius-lg: 1rem;
+    --orbit-radius-button: 9999px;
+    --orbit-border-width: 1px;
+}
+
+[data-orbit-theme="bold"] {
+    --orbit-container-max-width: 80rem;
+    --orbit-section-spacing-y: 5rem;
+    --orbit-radius-base: 1rem;
+    --orbit-radius-lg: 1.5rem;
+    --orbit-radius-button: 0.75rem;
+    --orbit-border-width: 2px;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    background-color: var(--orbit-color-background);
+    color: var(--orbit-color-text);
+    font-family: var(--orbit-font-body);
+}
+
+.orbit-theme-shell {
+    min-height: 100%;
+    background-color: var(--orbit-color-background);
+    color: var(--orbit-color-text);
+    font-family: var(--orbit-font-body);
+}
+
+.orbit-theme-shell a {
+    color: var(--orbit-color-accent);
+}
+
+.orbit-container {
+    width: 100%;
+    max-width: var(--orbit-container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.orbit-section {
+    padding-top: var(--orbit-section-spacing-y);
+    padding-bottom: var(--orbit-section-spacing-y);
+}
+
+.orbit-heading {
+    font-family: var(--orbit-font-heading);
+    color: var(--orbit-color-text);
+}
+
+.orbit-card {
+    background-color: var(--orbit-color-surface);
+    color: var(--orbit-color-text);
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-lg);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+.orbit-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    background-color: var(--orbit-color-accent);
+    color: var(--orbit-color-background);
+    border: var(--orbit-border-width) solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-button);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.orbit-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    background-color: var(--orbit-color-surface);
+    color: var(--orbit-color-accent);
+    border: var(--orbit-border-width) solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-button);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* SiteTheme visual variants (CLEAN, EDITORIAL, CLINICAL, BOLD) */
+[data-orbit-theme="clean"] [data-orbit-block="HeroBanner"] {
+    border-top: 3px solid var(--orbit-color-accent);
+}
+
+[data-orbit-theme="editorial"] [data-orbit-block="Header"] {
+    background-color: transparent;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom: 2px solid var(--orbit-color-text);
+    border-radius: 0;
+}
+
+[data-orbit-theme="editorial"] [data-orbit-block="HeroBanner"] {
+    background-color: var(--orbit-color-surface);
+    border-left: 4px solid var(--orbit-color-accent);
+    border-top: 1px solid var(--orbit-color-border);
+    border-right: 1px solid var(--orbit-color-border);
+    border-bottom: 1px solid var(--orbit-color-border);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+[data-orbit-theme="editorial"] .orbit-heading {
+    letter-spacing: -0.02em;
+}
+
+[data-orbit-theme="clinical"] [data-orbit-block="Header"] {
+    border-bottom: 2px solid var(--orbit-color-accent);
+}
+
+[data-orbit-theme="clinical"] [data-orbit-block="HeroBanner"] {
+    background-color: var(--orbit-color-surface);
+    border: 1px solid var(--orbit-color-border);
+    border-top: 4px solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-lg);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+[data-orbit-theme="bold"] [data-orbit-block="Header"] {
+    border: 2px solid var(--orbit-color-accent);
+}
+
+[data-orbit-theme="bold"] [data-orbit-block="HeroBanner"] {
+    background-color: var(--orbit-color-surface);
+    border: 2px solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-lg);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+[data-orbit-theme="bold"] .orbit-heading {
+    letter-spacing: -0.03em;
+}
+
+/* Per-section Appearance alignment overrides (EPIC-14 / Puck Appearance tab) */
+[data-orbit-align="left"],
+[data-orbit-align="left"] [data-orbit-block] {
+    text-align: left !important;
+}
+
+[data-orbit-align="left"] [data-orbit-block] {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+[data-orbit-align="center"],
+[data-orbit-align="center"] [data-orbit-block] {
+    text-align: center !important;
+}
+
+[data-orbit-align="center"] [data-orbit-block] {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+[data-orbit-align="right"],
+[data-orbit-align="right"] [data-orbit-block] {
+    text-align: right !important;
+}
+
+[data-orbit-align="right"] [data-orbit-block] {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
