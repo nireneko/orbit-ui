@@ -42,8 +42,10 @@ export interface OrbitInlineDamTriggerOptions {
 
 export interface OrbitComponentContextProps {
     editorMode?: boolean;
+    showMediaPreview?: boolean;
     siteTheme?: OrbitSiteTheme;
     resolveAssetUrl?: (damAssetId: string) => string;
+    resolveExternalReference?: (damAssetId: string) => string | undefined;
     onInlineSelectDamAsset?: (options: OrbitInlineDamTriggerOptions) => void;
     selectAssetLabel?: string;
 }

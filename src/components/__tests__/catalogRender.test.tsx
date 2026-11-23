@@ -69,7 +69,7 @@ describe('@orbit/ui 15 Component Catalog SSR Rendering', () => {
             aspect_ratio: '16:9',
         },
         Youtube: {
-            video_id: 'dQw4w9WgXcQ',
+            dam_asset_id: 'dam_default_youtube',
             title: 'YouTube video',
             caption: 'Video caption.',
             aspect_ratio: '16:9',
@@ -170,6 +170,8 @@ describe('@orbit/ui 15 Component Catalog SSR Rendering', () => {
 
     it('renders every registered component via renderToStaticMarkup in both editorMode=true and editorMode=false', () => {
         const resolveAssetUrl = (damId: string): string => `/api/v1/dam/assets/${damId}/stream`;
+        const resolveExternalReference = (damId: string): string | undefined =>
+            damId === 'dam_default_youtube' ? 'dQw4w9WgXcQ' : undefined;
 
         for (const [componentName, defaultProps] of Object.entries(defaultPropsByComponent)) {
             const Renderer = resolveOrbitComponentRenderer(componentName);
@@ -181,6 +183,7 @@ describe('@orbit/ui 15 Component Catalog SSR Rendering', () => {
                         editorMode,
                         siteTheme: 'CLINICAL',
                         resolveAssetUrl,
+                        resolveExternalReference,
                     }),
                 );
 
@@ -188,6 +191,59 @@ describe('@orbit/ui 15 Component Catalog SSR Rendering', () => {
                 expect(html).toContain(`data-orbit-block="${componentName}"`);
             }
         }
+    });
+
+    it('renders Youtube placeholder in editorMode by default and iframe from DAM external reference when showMediaPreview is true', () => {
+        const YoutubeRenderer = resolveOrbitComponentRenderer('Youtube');
+        const resolveExternalReference = (damId: string): string | undefined =>
+            damId === '019a0000-0000-7000-8000-000000000001' ? 'dQw4w9WgXcQ' : undefined;
+
+        const placeholderHtml = renderToStaticMarkup(
+            React.createElement(YoutubeRenderer, {
+                ...defaultPropsByComponent.Youtube,
+                dam_asset_id: '019a0000-0000-7000-8000-000000000001',
+                editorMode: true,
+                showMediaPreview: false,
+                resolveExternalReference,
+            }),
+        );
+        expect(placeholderHtml).not.toContain('<iframe');
+        expect(placeholderHtml).toContain('YouTube (019a0000-0000-7000-8000-000000000001)');
+
+        const previewHtml = renderToStaticMarkup(
+            React.createElement(YoutubeRenderer, {
+                ...defaultPropsByComponent.Youtube,
+                dam_asset_id: '019a0000-0000-7000-8000-000000000001',
+                editorMode: true,
+                showMediaPreview: true,
+                resolveExternalReference,
+            }),
+        );
+        expect(previewHtml).toContain('<iframe');
+        expect(previewHtml).toContain('youtube-nocookie.com/embed/dQw4w9WgXcQ');
+        expect(previewHtml).toContain('pointer-events:none');
+
+        const unresolvedEditorHtml = renderToStaticMarkup(
+            React.createElement(YoutubeRenderer, {
+                ...defaultPropsByComponent.Youtube,
+                dam_asset_id: 'dam_default_youtube',
+                editorMode: true,
+                showMediaPreview: true,
+                resolveExternalReference,
+            }),
+        );
+        expect(unresolvedEditorHtml).not.toContain('<iframe');
+        expect(unresolvedEditorHtml).toContain('YouTube (dam_default_youtube)');
+
+        const publicUnresolvedHtml = renderToStaticMarkup(
+            React.createElement(YoutubeRenderer, {
+                ...defaultPropsByComponent.Youtube,
+                dam_asset_id: 'dam_unapproved',
+                editorMode: false,
+                resolveExternalReference,
+            }),
+        );
+        expect(publicUnresolvedHtml).toBe('');
     });
 
     it('returns FallbackComponent for unknown or deprecated legacy component names', () => {

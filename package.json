@@ -1,6 +1,6 @@
 {
   "name": "@orbit/ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Shared visual catalog, ThemeShell, SectionWrapper, and CSS token system for Orbit Hub (Symfony Puck Editor & Astro SSR Data Plane)",
   "type": "module",
   "private": true,
