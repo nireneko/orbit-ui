@@ -17,7 +17,8 @@ How the reference design becomes `@orbit/ui` components. Ports TASK-15.22 to 15.
 | `src/styles/themes.css` | Per-theme structural tokens (`[data-orbit-theme="…"]`) and theme rules that apply to no single component. |
 | `src/styles/components/<name>.css` | Everything one component needs, including theme-scoped rules for that component. |
 
-One stylesheet exists per catalog component, plus `fallback.css`: `header`, `hero-banner`, `image-and-text`, `text`, `link`, `image`, `youtube`, `document-download-center`, `interactive-slideshow`, `clinical-study-card-grid`, `medical-inquiry-form`, `restricted-video-player`, `check-in-scanner`, `schedule-timeline`, `user-favorite-tracker`. All of them are already imported, so **a port edits only its own `components/<name>.css`** and never the entry stylesheet. TASK-15.21 adds `cta.css` and `inline-dam-trigger.css` for the shared CTA and inline DAM trigger.
+One stylesheet exists per catalog component, plus `fallback.css`: `header`, `hero-banner`, `image-and-text`, `text`, `link`, `image`, `youtube`, `document-download-center`, `interactive-slideshow`, `clinical-study-card-grid`, `medical-inquiry-form`, `restricted-video-player`, `check-in-scanner`, `schedule-timeline`, `user-favorite-tracker`. Two shared sheets sit next to them: `cta.css` (the shared CTA) and `inline-dam-trigger.css` (the editor's inline DAM trigger), both added by TASK-15.21. They are imported right after `themes.css` and before every component sheet, so a component's own rules can adjust them with equal specificity.
+All of these sheets are already imported, so **a port edits only its own `components/<name>.css`** and never the entry stylesheet.
 
 `src/styles/__tests__/stylesheet.test.ts` enforces this layout:
 
