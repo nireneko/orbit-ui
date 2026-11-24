@@ -1,1 +1,75 @@
-/* Text: no component rules yet. Its port fills this file (see docs/design-port.md). */
+/*
+ * Text.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/content/Text.astro.
+ */
+
+/* section: hub-text w-full py-8 + TONE[tone] */
+.orbit-text {
+    width: 100%;
+    padding-block: var(--orbit-space-8);
+}
+
+/* text-hub-text */
+.orbit-text--tone-default {
+    color: var(--orbit-color-text);
+}
+
+/* text-hub-text/70 */
+.orbit-text--tone-muted {
+    color: color-mix(in oklab, var(--orbit-color-text) 70%, transparent);
+}
+
+/* text-hub-primary */
+.orbit-text--tone-accent {
+    color: var(--orbit-color-accent);
+}
+
+/* mx-auto flex w-full max-w-3xl flex-col gap-3 px-4 */
+.orbit-text__inner {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--orbit-space-3);
+    width: 100%;
+    max-width: var(--orbit-max-width-3xl);
+    margin-inline: auto;
+    padding-inline: var(--orbit-space-4);
+}
+
+/* ALIGNMENT[alignment] on the inner wrapper: text-left */
+.orbit-text--align-left .orbit-text__inner {
+    text-align: left;
+}
+
+/* text-center */
+.orbit-text--align-center .orbit-text__inner {
+    text-align: center;
+}
+
+/* text-right */
+.orbit-text--align-right .orbit-text__inner {
+    text-align: right;
+}
+
+/* font-hub-heading text-3xl font-bold text-hub-primary */
+.orbit-text__heading {
+    margin: 0;
+    font-family: var(--orbit-font-heading);
+    font-size: var(--orbit-font-size-3xl);
+    line-height: var(--orbit-line-height-3xl);
+    font-weight: var(--orbit-font-weight-bold);
+    color: var(--orbit-color-accent);
+}
+
+/*
+ * font-hub text-lg leading-relaxed.
+ * white-space: pre-wrap is not in the reference: it keeps the line breaks of the
+ * plain-text body, as @orbit/ui rendered it before the port.
+ */
+.orbit-text__body {
+    margin: 0;
+    font-family: var(--orbit-font-body);
+    font-size: var(--orbit-font-size-lg);
+    line-height: var(--orbit-line-height-relaxed);
+    white-space: pre-wrap;
+}

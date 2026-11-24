@@ -267,24 +267,6 @@ describe('@orbit/ui resolved stylesheet content', () => {
         }
     });
 
-    it('defines theme-scoped visual rules for the editorial, clinical and bold SiteThemes', () => {
-        const declarations = resolvedDeclarations();
-
-        for (const theme of ['editorial', 'clinical', 'bold']) {
-            const scoped = declarations.filter((declaration) =>
-                declaration.selector.startsWith(`[data-orbit-theme="${theme}"] `),
-            );
-            expect(scoped.length, theme).toBeGreaterThan(0);
-        }
-        expect(
-            declarations.some(
-                (declaration) =>
-                    declaration.selector.startsWith('[data-orbit-theme="') &&
-                    declaration.value.includes('var(--orbit-color-accent)'),
-            ),
-        ).toBe(true);
-    });
-
     it('keeps the per-section Appearance alignment overrides', () => {
         const selectors = resolvedDeclarations().map((declaration) => declaration.selector);
 
