@@ -17,8 +17,24 @@ export interface ClinicalStudyCardGridComponentProps extends OrbitComponentConte
     items?: ClinicalStudyItem[];
 }
 
+const BLOCK = 'orbit-clinical-study-card-grid';
+const EDITOR_LINK_HREF = '#editor-study';
+const STUDY_DAM_TYPES = ['DOCUMENT_PDF', 'DOCUMENT_WORD', 'ARCHIVE_ZIP'];
+const DEFAULT_COLUMNS = 3;
+const DEFAULT_TITLE = 'Clinical Study';
+const VIEW_STUDY_LABEL = 'View study';
+
+/** The schema enum is 2, 3 or 4; anything else renders the default. */
+function safeColumns(columns: number | undefined): number {
+    return columns === 2 || columns === 4 ? columns : DEFAULT_COLUMNS;
+}
+
+/**
+ * Grid of clinical study cards. One column on small screens, two from `48rem` and
+ * the `columns` value from `64rem` (the modifier class drives the stylesheet).
+ */
 export function ClinicalStudyCardGrid({
-    columns = 3,
+    columns = DEFAULT_COLUMNS,
     items = [],
     editorMode = false,
     resolveAssetUrl,
@@ -26,82 +42,50 @@ export function ClinicalStudyCardGrid({
     selectAssetLabel,
 }: ClinicalStudyCardGridComponentProps): React.ReactElement {
     const cards = Array.isArray(items) ? items : [];
-    const safeColumns = columns === 2 || columns === 4 ? columns : 3;
+    const columnCount = safeColumns(columns);
+    const preventNavigation = editorMode ? (event: React.MouseEvent) => event.preventDefault() : undefined;
 
     return (
         <div
             data-orbit-block="ClinicalStudyCardGrid"
-            data-orbit-columns={String(safeColumns)}
-            className="orbit-container"
+            data-orbit-columns={String(columnCount)}
+            className={`${BLOCK} ${BLOCK}--columns-${columnCount}`}
         >
-            <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: `repeat(${safeColumns}, minmax(0, 1fr))`,
-                    gap: '1.5rem',
-                }}
-            >
-                {cards.map((item, idx) => (
-                    <article
-                        key={`${item.dam_asset_id ?? 'study'}-${idx}`}
-                        className="orbit-card"
-                        style={{ padding: '1.5rem' }}
-                    >
-                        {item.badge && (
-                            <span
-                                style={{
-                                    display: 'inline-block',
-                                    fontSize: '0.75rem',
-                                    fontWeight: 700,
-                                    marginBottom: '0.5rem',
-                                }}
-                            >
-                                {item.badge}
-                            </span>
-                        )}
-                        <h3
-                            className="orbit-heading"
-                            style={{
-                                fontSize: '1.125rem',
-                                fontWeight: 700,
-                                marginBottom: '0.5rem',
-                            }}
-                        >
-                            {item.title ?? 'Clinical Study'}
-                        </h3>
-                        {isRenderableContent(item.description) && (
-                            <p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>
-                                {item.description}
-                            </p>
-                        )}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                            <a
-                                href={
-                                    editorMode
-                                        ? '#editor-study'
-                                        : (item.link_uri ??
-                                          resolveDamAssetUrl(item.dam_asset_id, resolveAssetUrl))
-                                }
-                                onClick={editorMode ? (e) => e.preventDefault() : undefined}
-                                className="orbit-btn-secondary"
-                            >
-                                View study
-                            </a>
-                            {renderInlineDamTrigger({
-                                editorMode,
-                                propPath: `items[${idx}].dam_asset_id`,
-                                currentAssetId: item.dam_asset_id,
-                                allowedDamTypes: [
-                                    'DOCUMENT_PDF',
-                                    'DOCUMENT_WORD',
-                                    'ARCHIVE_ZIP',
-                                ],
-                                label: selectAssetLabel,
-                                onInlineSelectDamAsset,
-                            })}
-                        </div>
-                    </article>
-                ))}
+            <div className={`${BLOCK}__inner`}>
+                <div className={`${BLOCK}__grid`}>
+                    {cards.map((item, idx) => (
+                        <article key={`${item.dam_asset_id ?? 'study'}-${idx}`} className={`${BLOCK}__card`}>
+                            {isRenderableContent(item.badge) && (
+                                <span className={`${BLOCK}__badge`}>{item.badge}</span>
+                            )}
+                            <h3 className={`${BLOCK}__title`}>{item.title ?? DEFAULT_TITLE}</h3>
+                            {isRenderableContent(item.description) && (
+                                <p className={`${BLOCK}__description`}>{item.description}</p>
+                            )}
+                            <div className={`${BLOCK}__actions`}>
+                                <a
+                                    href={
+                                        editorMode
+                                            ? EDITOR_LINK_HREF
+                                            : (item.link_uri ?? resolveDamAssetUrl(item.dam_asset_id, resolveAssetUrl))
+                                    }
+                                    onClick={preventNavigation}
+                                    className={`${BLOCK}__action`}
+                                >
+                                    {VIEW_STUDY_LABEL}
+                                </a>
+                                {renderInlineDamTrigger({
+                                    editorMode,
+                                    propPath: `items[${idx}].dam_asset_id`,
+                                    currentAssetId: item.dam_asset_id,
+                                    allowedDamTypes: STUDY_DAM_TYPES,
+                                    label: selectAssetLabel,
+                                    onInlineSelectDamAsset,
+                                })}
+                            </div>
+                        </article>
+                    ))}
+                </div>
             </div>
         </div>
     );
