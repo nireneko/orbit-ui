@@ -18,6 +18,20 @@ export interface MedicalInquiryFormComponentProps extends OrbitComponentContextP
     fields?: MedicalInquiryFieldItem[];
 }
 
+const BLOCK = 'orbit-medical-inquiry-form';
+const FIELD_ID_PREFIX = 'med-inquiry-';
+const TEXTAREA_TYPE = 'textarea';
+const DEFAULT_INPUT_TYPE = 'text';
+const DEFAULT_FIELD_LABEL = 'Field';
+const REQUIRED_MARKER = ' *';
+const SUBMIT_LABEL = 'Submit inquiry';
+const TEXTAREA_ROWS = 3;
+
+/**
+ * Medical information / adverse event inquiry form. It is hydrated in Astro, so the
+ * render depends only on its props (no browser state, dates or random values).
+ * In `editorMode` the controls are disabled and the form never submits.
+ */
 export function MedicalInquiryForm({
     inquiry_type = 'MEDICAL_INFORMATION',
     submit_endpoint = '#',
@@ -28,80 +42,58 @@ export function MedicalInquiryForm({
     const formFields = Array.isArray(fields) ? fields : [];
 
     return (
-        <div
-            data-orbit-block="MedicalInquiryForm"
-            data-orbit-inquiry-type={inquiry_type}
-            className="orbit-container"
-        >
-            <div className="orbit-card" style={{ padding: '2rem' }}>
-                {pharmacovigilance_banner?.show_mandatory_warning && (
-                    <div
-                        role="note"
-                        style={{
-                            padding: '0.75rem 1rem',
-                            marginBottom: '1.25rem',
-                            border: 'var(--orbit-border-width) solid var(--orbit-color-border)',
-                            borderRadius: 'var(--orbit-radius-base)',
-                            fontSize: '0.875rem',
-                        }}
+        <div data-orbit-block="MedicalInquiryForm" data-orbit-inquiry-type={inquiry_type} className={BLOCK}>
+            <div className={`${BLOCK}__inner`}>
+                <div className={`${BLOCK}__card`}>
+                    {pharmacovigilance_banner?.show_mandatory_warning && (
+                        <div role="note" className={`${BLOCK}__banner`}>
+                            {pharmacovigilance_banner.text}
+                        </div>
+                    )}
+
+                    <form
+                        action={editorMode ? undefined : submit_endpoint}
+                        onSubmit={editorMode ? (event) => event.preventDefault() : undefined}
+                        className={`${BLOCK}__form`}
                     >
-                        {pharmacovigilance_banner.text}
-                    </div>
-                )}
+                        {formFields.map((field, idx) => {
+                            const fieldId = `${FIELD_ID_PREFIX}${field.name ?? idx}`;
+                            return (
+                                <div key={fieldId} className={`${BLOCK}__field`}>
+                                    <label htmlFor={fieldId} className={`${BLOCK}__label`}>
+                                        {field.label ?? field.name ?? DEFAULT_FIELD_LABEL}
+                                        {field.required ? REQUIRED_MARKER : ''}
+                                    </label>
+                                    {field.type === TEXTAREA_TYPE ? (
+                                        <textarea
+                                            id={fieldId}
+                                            name={field.name}
+                                            disabled={editorMode}
+                                            required={Boolean(field.required)}
+                                            rows={TEXTAREA_ROWS}
+                                            className={`${BLOCK}__control ${BLOCK}__control--textarea`}
+                                        />
+                                    ) : (
+                                        <input
+                                            id={fieldId}
+                                            name={field.name}
+                                            type={field.type ?? DEFAULT_INPUT_TYPE}
+                                            disabled={editorMode}
+                                            required={Boolean(field.required)}
+                                            className={`${BLOCK}__control`}
+                                        />
+                                    )}
+                                </div>
+                            );
+                        })}
 
-                <form
-                    action={editorMode ? undefined : submit_endpoint}
-                    onSubmit={editorMode ? (event) => event.preventDefault() : undefined}
-                    style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
-                >
-                    {formFields.map((field, idx) => {
-                        const fieldId = `med-inquiry-${field.name ?? idx}`;
-                        return (
-                            <div
-                                key={fieldId}
-                                style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}
-                            >
-                                <label htmlFor={fieldId} style={{ fontWeight: 600, fontSize: '0.875rem' }}>
-                                    {field.label ?? field.name ?? 'Field'}
-                                    {field.required ? ' *' : ''}
-                                </label>
-                                {field.type === 'textarea' ? (
-                                    <textarea
-                                        id={fieldId}
-                                        name={field.name}
-                                        disabled={editorMode}
-                                        required={Boolean(field.required)}
-                                        rows={3}
-                                        style={{
-                                            padding: '0.5rem',
-                                            borderRadius: 'var(--orbit-radius-base)',
-                                            border: 'var(--orbit-border-width) solid var(--orbit-color-border)',
-                                        }}
-                                    />
-                                ) : (
-                                    <input
-                                        id={fieldId}
-                                        name={field.name}
-                                        type={field.type ?? 'text'}
-                                        disabled={editorMode}
-                                        required={Boolean(field.required)}
-                                        style={{
-                                            padding: '0.5rem',
-                                            borderRadius: 'var(--orbit-radius-base)',
-                                            border: 'var(--orbit-border-width) solid var(--orbit-color-border)',
-                                        }}
-                                    />
-                                )}
-                            </div>
-                        );
-                    })}
-
-                    <div>
-                        <button type="submit" disabled={editorMode} className="orbit-btn-primary">
-                            Submit inquiry
-                        </button>
-                    </div>
-                </form>
+                        <div className={`${BLOCK}__footer`}>
+                            <button type="submit" disabled={editorMode} className={`${BLOCK}__submit`}>
+                                {SUBMIT_LABEL}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );
