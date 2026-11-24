@@ -1,10 +1,19 @@
 /*
  * SiteTheme structural tokens and theme-scoped rules (CLEAN, EDITORIAL, CLINICAL, BOLD).
- * Per-theme structural values mirror SiteTheme::getStructuralTokens() in orbit-hub;
- * aligning them is TASK-15.31. Theme rules that target one component live in
+ *
+ * The per-theme values are defaults that mirror SiteTheme::getStructuralTokens()
+ * in orbit-hub exactly; at runtime the host overrides them with Symfony
+ * `css_variables`. Theme rules that target one component live in
  * components/<name>.css, not here.
+ *
+ * Cascade: the entry stylesheet places `:root` after its @import lines, so a
+ * plain `[data-orbit-theme]` block would tie with `:root` on
+ * `<html data-orbit-theme>` and lose by order. `:root[data-orbit-theme]` outranks
+ * the `:root` defaults there and still yields to the host
+ * `html:root[data-orbit-theme]` rule built from `css_variables`.
  */
 
+:root[data-orbit-theme="clean"],
 [data-orbit-theme="clean"] {
     --orbit-container-max-width: 72rem;
     --orbit-section-spacing-y: 4rem;
@@ -12,8 +21,10 @@
     --orbit-radius-lg: 0.75rem;
     --orbit-radius-button: 0.5rem;
     --orbit-border-width: 1px;
+    --orbit-card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06);
 }
 
+:root[data-orbit-theme="editorial"],
 [data-orbit-theme="editorial"] {
     --orbit-container-max-width: 68rem;
     --orbit-section-spacing-y: 5.5rem;
@@ -24,6 +35,7 @@
     --orbit-card-shadow: none;
 }
 
+:root[data-orbit-theme="clinical"],
 [data-orbit-theme="clinical"] {
     --orbit-container-max-width: 76rem;
     --orbit-section-spacing-y: 3.5rem;
@@ -31,8 +43,10 @@
     --orbit-radius-lg: 1rem;
     --orbit-radius-button: 9999px;
     --orbit-border-width: 1px;
+    --orbit-card-shadow: 0 4px 16px -2px rgb(15 23 42 / 0.08);
 }
 
+:root[data-orbit-theme="bold"],
 [data-orbit-theme="bold"] {
     --orbit-container-max-width: 80rem;
     --orbit-section-spacing-y: 5rem;
@@ -40,6 +54,14 @@
     --orbit-radius-lg: 1.5rem;
     --orbit-radius-button: 0.75rem;
     --orbit-border-width: 2px;
+    --orbit-card-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.12);
+}
+
+/* Content container (reference theme layouts): full width except EDITORIAL. */
+.orbit-theme-shell[data-orbit-theme="editorial"] > .orbit-theme-shell__content {
+    max-width: var(--orbit-max-width-5xl);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 [data-orbit-theme="editorial"] .orbit-heading {

@@ -56,9 +56,9 @@ All tokens are defined on `:root` in `orbit-tokens.css`. The host overrides the 
 | `--orbit-radius-lg` | `0.75rem` | `0.75rem` | `0.25rem` | `1rem` | `1.5rem` |
 | `--orbit-radius-button` | `0.5rem` | `0.5rem` | `0rem` | `9999px` | `0.75rem` |
 | `--orbit-border-width` | `1px` | `1px` | `1px` | `1px` | `2px` |
-| `--orbit-card-shadow` | `0 1px 3px 0 rgb(0 0 0 / 0.06)` | (default) | `none` | (default) | (default) |
+| `--orbit-card-shadow` | `0 1px 3px 0 rgb(0 0 0 / 0.06)` | `0 1px 3px 0 rgb(0 0 0 / 0.06)` | `none` | `0 4px 16px -2px rgb(15 23 42 / 0.08)` | `0 10px 25px -5px rgb(0 0 0 / 0.12)` |
 
-The source of truth for these values is `SiteTheme::getStructuralTokens()` in `orbit-hub`. They match it except `--orbit-card-shadow`. Symfony defines `0 4px 16px -2px rgb(15 23 42 / 0.08)` for `clinical` and `0 10px 25px -5px rgb(0 0 0 / 0.12)` for `bold`, and `themes.css` does not set them yet. TASK-15.31 aligns them. Ports do not change per-theme values.
+The source of truth for these values is `SiteTheme::getStructuralTokens()` in `orbit-hub`, and `themes.css` mirrors it exactly, `--orbit-card-shadow` included. Ports do not change per-theme values.
 
 ### Type scale
 
@@ -316,7 +316,7 @@ When a heading size changes at `md`, put the line height in the same media block
 | `backdrop-blur-md` | `-webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px)` |
 | `transition-colors` | `transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms` |
 
-The unnumbered border utilities (`border`, `border-t`, `border-b`) are 1px in Tailwind, and that is also the default of `--orbit-border-width`. They use the token so the per-theme border width from `SiteTheme` (2px in `bold`) applies. The numbered widths stay literal. Always write the colour from the matching `border-hub-*` utility in the same declaration or next to it: plain CSS has no `--tw-border-style` default.
+The unnumbered border utilities (`border`, `border-t`, `border-b`) are 1px in Tailwind, and that is also the default of `--orbit-border-width`. They use the token so the per-theme border width from `SiteTheme` (2px in `bold`) applies. This deliberately departs from the reference, where `border` was always 1px and `--orbit-border-width` was defined but not consumed: in `bold` these borders draw 2px, as `SiteTheme` intends. The numbered widths stay literal. Always write the colour from the matching `border-hub-*` utility in the same declaration or next to it: plain CSS has no `--tw-border-style` default.
 
 ### Scroll snap
 
@@ -345,6 +345,6 @@ Hosts pass these to every renderer (`OrbitComponentContextProps` in `src/types.t
 | `tenantLabel` | `string` (optional) | Display name of the current tenant, where the reference prints `siteContext.tenant` (for example the `bold` HeroBanner badge). |
 | `resolveLink` | `(href: string) => { href: string; target?: string; rel?: string }` (optional) | Resolves an authored `href`, `hub://` included, into a navigable link with `target` and `rel`. See rule 2. |
 
-## Cascade note for TASK-15.31
+## Theme cascade
 
-The `@import` lines must precede `:root`, so `:root` now comes after the `[data-orbit-theme]` token rules. The two selectors have the same specificity. On an element that carries both, the `:root` default wins on that element. The builder and the editor iframe put `data-orbit-theme` on `<html>`. `ThemeShell` sets the theme tokens again on its own element, so components inside `ThemeShell` still get the theme values. TASK-15.31 owns the theme values and `ThemeShell`, so it can decide whether `<html>` itself needs them.
+The `@import` lines must precede `:root`, so `:root` comes after the theme token rules. The theme blocks therefore use `:root[data-orbit-theme="x"], [data-orbit-theme="x"]`. The first selector outranks the `:root` defaults on `<html data-orbit-theme>`, and the second applies the theme on any other element, such as the `ThemeShell` root. In the builder, which renders sections with `SectionWrapper` only, tenant values come from the host `html:root[data-orbit-theme]` rule built from Symfony `css_variables`; that rule is more specific and overrides the theme defaults. `ThemeShell` writes `cssVariables` inline on its root for the editor.

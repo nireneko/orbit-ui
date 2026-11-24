@@ -1,1 +1,97 @@
-/* InteractiveSlideshow: no component rules yet. Its port fills this file (see docs/design-port.md). */
+/*
+ * InteractiveSlideshow.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/media/InteractiveSlideshow.astro.
+ * The reference has no breakpoint or theme variants for this component.
+ */
+
+/* section: relative w-full */
+.orbit-interactive-slideshow {
+    position: relative;
+    width: 100%;
+}
+
+/* flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth */
+.orbit-interactive-slideshow__track {
+    display: flex;
+    gap: var(--orbit-space-4);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+}
+
+.orbit-interactive-slideshow__track:focus-visible {
+    outline: 2px solid var(--orbit-color-accent);
+    outline-offset: 2px;
+}
+
+/*
+ * figure: w-full shrink-0 snap-center (plus the figure margin reset that Tailwind preflight
+ * provided). position: relative anchors the editor's inline DAM trigger.
+ */
+.orbit-interactive-slideshow__slide {
+    position: relative;
+    width: 100%;
+    flex-shrink: 0;
+    margin: 0;
+    scroll-snap-align: center;
+}
+
+/* aspect-video w-full rounded-hub-lg object-cover shadow-hub-card (plus display: block from Tailwind preflight) */
+.orbit-interactive-slideshow__image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--orbit-radius-lg);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+.orbit-interactive-slideshow__image--selectable {
+    cursor: pointer;
+}
+
+/* Editor-only: places the inline DAM trigger over the image. */
+.orbit-interactive-slideshow__dam-trigger {
+    position: absolute;
+    top: var(--orbit-space-3);
+    right: var(--orbit-space-3);
+}
+
+/* mt-2 text-sm text-hub-text/70 */
+.orbit-interactive-slideshow__caption {
+    margin-top: var(--orbit-space-2);
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    color: color-mix(in oklab, var(--orbit-color-text) 70%, transparent);
+}
+
+/* mt-3 flex justify-center gap-3 */
+.orbit-interactive-slideshow__controls {
+    display: flex;
+    justify-content: center;
+    gap: var(--orbit-space-3);
+    margin-top: var(--orbit-space-3);
+}
+
+/*
+ * rounded-hub-btn border border-hub-primary px-3 py-1 text-hub-primary
+ * (plus the button reset that Tailwind preflight provided: margin, font and background).
+ */
+.orbit-interactive-slideshow__prev,
+.orbit-interactive-slideshow__next {
+    margin: 0;
+    padding-inline: var(--orbit-space-3);
+    padding-block: var(--orbit-space-1);
+    border: var(--orbit-border-width) solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-button);
+    background-color: transparent;
+    color: var(--orbit-color-accent);
+    font: inherit;
+    letter-spacing: inherit;
+}
+
+.orbit-interactive-slideshow__prev:focus-visible,
+.orbit-interactive-slideshow__next:focus-visible {
+    outline: 2px solid var(--orbit-color-accent);
+    outline-offset: 2px;
+}
