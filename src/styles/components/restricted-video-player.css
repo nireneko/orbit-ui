@@ -1,1 +1,117 @@
-/* RestrictedVideoPlayer: no component rules yet. Its port fills this file (see docs/design-port.md). */
+/*
+ * RestrictedVideoPlayer.
+ * No Astro reference: the previous inline sizes mapped to the nearest token (docs/design-port.md).
+ * The unauthorized gate stacks on small screens and becomes a row from 40rem; the card
+ * padding and the title grow from 48rem.
+ */
+
+.orbit-restricted-video-player {
+    width: 100%;
+    padding-block: var(--orbit-space-8);
+}
+
+.orbit-restricted-video-player__inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--orbit-container-max-width);
+    margin-inline: auto;
+    padding-inline: var(--orbit-space-4);
+}
+
+.orbit-restricted-video-player__card {
+    box-sizing: border-box;
+    padding: var(--orbit-space-6);
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-lg);
+    background-color: var(--orbit-color-surface);
+    color: var(--orbit-color-text);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+.orbit-restricted-video-player__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--orbit-space-2);
+    margin-bottom: var(--orbit-space-3);
+    font-size: var(--orbit-font-size-xs);
+    line-height: var(--orbit-line-height-xs);
+}
+
+.orbit-restricted-video-player__restriction {
+    font-weight: var(--orbit-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--orbit-letter-spacing-wider);
+}
+
+.orbit-restricted-video-player__duration {
+    color: color-mix(in oklab, var(--orbit-color-text) 75%, transparent);
+}
+
+.orbit-restricted-video-player__title {
+    margin: 0;
+    margin-bottom: var(--orbit-space-2);
+    font-family: var(--orbit-font-heading);
+    font-size: var(--orbit-font-size-xl);
+    line-height: var(--orbit-line-height-xl);
+    font-weight: var(--orbit-font-weight-bold);
+    color: var(--orbit-color-text);
+}
+
+.orbit-restricted-video-player__disclaimer {
+    margin: 0;
+    margin-bottom: var(--orbit-space-4);
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    color: color-mix(in oklab, var(--orbit-color-text) 80%, transparent);
+}
+
+.orbit-restricted-video-player__gate {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--orbit-space-4);
+    padding: var(--orbit-space-4);
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-base);
+}
+
+.orbit-restricted-video-player__gate-message {
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+}
+
+/* Primary button look, formerly `.orbit-btn-primary` from shell.css. It is a label, not a control. */
+.orbit-restricted-video-player__gate-cta {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--orbit-space-5);
+    padding-block: var(--orbit-space-2-5);
+    border: var(--orbit-border-width) solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-button);
+    background-color: var(--orbit-color-accent);
+    color: var(--orbit-color-on-accent);
+    font-weight: var(--orbit-font-weight-semibold);
+}
+
+@media (min-width: 40rem) {
+    .orbit-restricted-video-player__gate {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 48rem) {
+    .orbit-restricted-video-player__card {
+        padding: var(--orbit-space-8);
+    }
+
+    .orbit-restricted-video-player__title {
+        font-size: var(--orbit-font-size-2xl);
+        line-height: var(--orbit-line-height-2xl);
+    }
+}

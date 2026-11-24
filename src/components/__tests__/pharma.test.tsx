@@ -15,6 +15,7 @@ import {
     type MedicalInquiryFieldItem,
     type MedicalInquiryFormComponentProps,
 } from '../pharma/MedicalInquiryForm';
+import { RestrictedVideoPlayer, type RestrictedVideoPlayerComponentProps } from '../pharma/RestrictedVideoPlayer';
 
 /**
  * TASK-15.32: the Pharma bundle components on the token contract of docs/design-port.md.
@@ -384,6 +385,123 @@ describe('MedicalInquiryForm', () => {
 
         it('colours the submit text with the on-accent token', () => {
             expect(declaration(readRules(SHEET), '', `.${BLOCK}__submit`, 'color')).toBe('var(--orbit-color-on-accent)');
+        });
+
+        it('uses only token-scale sizes and the guide breakpoints', () => {
+            expectTokenScaledSheet(SHEET);
+            expectOnlyGuideBreakpoints(SHEET);
+        });
+    });
+});
+
+describe('RestrictedVideoPlayer', () => {
+    const BLOCK = 'orbit-restricted-video-player';
+    const SCHEMA_PROPS: RestrictedVideoPlayerComponentProps = {
+        provider: 'vimeo_enterprise',
+        vimeo_video_id: '987654321',
+        title: 'Dosing in renal impairment',
+        duration_minutes: 12,
+        disclaimer_text: 'For healthcare professionals only.',
+        fallback_unauthorized: { message: 'Sign in as an HCP to watch.', login_cta_label: 'HCP sign in' },
+    };
+
+    /** Static markup without React's text separators, so adjacent text nodes read as one string. */
+    function render(props: Partial<RestrictedVideoPlayerComponentProps> = {}): string {
+        return renderToStaticMarkup(<RestrictedVideoPlayer {...SCHEMA_PROPS} {...props} />).replace(/<!-- -->/g, '');
+    }
+
+    describe('markup', () => {
+        it('renders a div root with its block class and keeps the data attributes', () => {
+            const markup = render();
+
+            expect(markup.startsWith('<div')).toBe(true);
+            expect(rootClassList(markup)).toContain(BLOCK);
+            expect(markup).toContain('data-orbit-block="RestrictedVideoPlayer"');
+            expect(markup).toContain('data-orbit-editor-mode="false"');
+            expect(render({ editorMode: true })).toContain('data-orbit-editor-mode="true"');
+            expect(markup).toContain(`<div class="${BLOCK}__inner"><div class="${BLOCK}__card">`);
+        });
+
+        it('renders the restriction label, the duration, the title and the disclaimer', () => {
+            const markup = render();
+
+            expect(markup).toContain(
+                `<div class="${BLOCK}__meta"><span class="${BLOCK}__restriction">HCP Restricted · vimeo_enterprise (987654321)</span><span class="${BLOCK}__duration">12 min</span></div>`,
+            );
+            expect(markup).toContain(`<h3 class="${BLOCK}__title">Dosing in renal impairment</h3>`);
+            expect(markup).toContain(`<p class="${BLOCK}__disclaimer">For healthcare professionals only.</p>`);
+        });
+
+        it('omits the disclaimer when it is empty', () => {
+            expect(render({ disclaimer_text: '' })).not.toContain(`${BLOCK}__disclaimer`);
+        });
+
+        it('renders the unauthorized gate with its message and sign-in label', () => {
+            expect(render()).toContain(
+                `<div class="${BLOCK}__gate"><span class="${BLOCK}__gate-message">Sign in as an HCP to watch.</span><span class="${BLOCK}__gate-cta">HCP sign in</span></div>`,
+            );
+        });
+
+        it('falls back to the default gate texts', () => {
+            const markup = render({ fallback_unauthorized: {} });
+
+            expect(markup).toContain(`<span class="${BLOCK}__gate-message">HCP authentication required.</span>`);
+            expect(markup).toContain(`<span class="${BLOCK}__gate-cta">Sign in</span>`);
+        });
+
+        it('renders no gate without fallback_unauthorized and never embeds the video', () => {
+            const markup = render({ fallback_unauthorized: undefined });
+
+            expect(markup).not.toContain(`${BLOCK}__gate`);
+            expect(render()).not.toContain('<iframe');
+            expect(render()).not.toContain('<video');
+        });
+
+        it('has no inline styles and no shell button, card or container classes', () => {
+            const markup = render();
+
+            expect(markup).not.toContain('style=');
+            expect(markup).not.toContain('orbit-btn-');
+            expect(markup).not.toContain('orbit-card');
+            expect(markup).not.toContain('orbit-container');
+        });
+    });
+
+    describe('stylesheet', () => {
+        const SHEET = 'restricted-video-player.css';
+
+        it('owns its vertical padding and widens the card padding from 48rem', () => {
+            const rules = readRules(SHEET);
+
+            expect(declaration(rules, '', `.${BLOCK}`, 'padding-block')).toMatch(/^var\(--orbit-space-/);
+            expect(declaration(rules, '', `.${BLOCK}__card`, 'padding')).toBe('var(--orbit-space-6)');
+            expect(declaration(rules, '@media (min-width: 48rem)', `.${BLOCK}__card`, 'padding')).toBe(
+                'var(--orbit-space-8)',
+            );
+        });
+
+        it('stacks the gate on small screens and lays it out in a row from 40rem', () => {
+            const rules = readRules(SHEET);
+
+            expect(declaration(rules, '', `.${BLOCK}__gate`, 'flex-direction')).toBe('column');
+            expect(declaration(rules, '@media (min-width: 40rem)', `.${BLOCK}__gate`, 'flex-direction')).toBe('row');
+        });
+
+        it('lets the meta row wrap', () => {
+            expect(declaration(readRules(SHEET), '', `.${BLOCK}__meta`, 'flex-wrap')).toBe('wrap');
+        });
+
+        it('grows the title from 48rem', () => {
+            const rules = readRules(SHEET);
+
+            expect(declaration(rules, '', `.${BLOCK}__title`, 'font-size')).toBe('var(--orbit-font-size-xl)');
+            expect(declaration(rules, '@media (min-width: 48rem)', `.${BLOCK}__title`, 'font-size')).toBe(
+                'var(--orbit-font-size-2xl)',
+            );
+        });
+
+        it('colours the sign-in label with the on-accent token', () => {
+            expect(declaration(readRules(SHEET), '', `.${BLOCK}__gate-cta`, 'color')).toBe('var(--orbit-color-on-accent)');
         });
 
         it('uses only token-scale sizes and the guide breakpoints', () => {
