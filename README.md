@@ -6,15 +6,21 @@ Shared visual catalog, `ThemeShell`, `SectionWrapper`, and CSS token system (`--
 
 ## Installation
 
-Install pinned to a release tag via Git:
+Install pinned to a release tag via Git, then import the stylesheet once in the host app:
 
 ```json
 {
   "dependencies": {
-    "@orbit/ui": "git+ssh://git@github.com/nireneko/orbit-ui.git#v0.2.0"
+    "@orbit/ui": "https://github.com/nireneko/orbit-ui.git#v0.4.0-rc.1"
   }
 }
 ```
+
+```ts
+import '@orbit/ui/styles.css';
+```
+
+The entry stylesheet imports one sheet per component; catalog components are styled only through these sheets, so they render unstyled without it. Token contract and class naming: [`docs/design-port.md`](docs/design-port.md). Changes per version, including what each consumer must update, are listed in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Development with Docker
 
@@ -45,7 +51,16 @@ Porting the reference design into components follows [`docs/design-port.md`](doc
 
 ## Release Workflow
 
-1. Update `"version"` in `package.json`.
-2. Commit and push to `main`.
-3. Create and push a matching Git tag (e.g. `git tag v0.2.1 && git push origin v0.2.1`).
-4. Bump the tag in `multi-platform` and `hub-builder`.
+Tags are immutable: a published tag is never moved or deleted. A fix after a release is a new version.
+
+**Prerelease** (`vX.Y.Z-rc.N`, tagged on the integration branch, e.g. `epic/15-single-engine`):
+
+1. Set the version inside the container, which updates `package.json` and both entries in `package-lock.json`: `docker compose run --rm node npm version X.Y.Z-rc.N --no-git-tag-version`.
+2. Add the `CHANGELOG.md` entry, listing every change a consumer must act on.
+3. Merge the PR into the integration branch with the gate green (`docker compose run --rm node sh -c "npm ci && npm run build && npm test"`).
+4. Tag that merge commit and push the tag: `git tag vX.Y.Z-rc.N <commit> && git push origin vX.Y.Z-rc.N`.
+5. A correction is the next prerelease (`-rc.N+1`), never a re-tag.
+
+**Release** (`vX.Y.Z`, tagged on `main`): the same steps with `X.Y.Z`, once the integration branch is merged into `main`.
+
+After either, bump the tag in the consumers (`orbit-hub` and `orbit-hub-builder`).
