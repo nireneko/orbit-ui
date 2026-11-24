@@ -8,6 +8,8 @@
  */
 @import './shell.css';
 @import './themes.css';
+@import './components/cta.css';
+@import './components/inline-dam-trigger.css';
 @import './components/header.css';
 @import './components/hero-banner.css';
 @import './components/image-and-text.css';
