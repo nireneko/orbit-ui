@@ -1,1 +1,42 @@
-/* Link: no component rules yet. Its port fills this file (see docs/design-port.md). */
+/*
+ * Link.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/content/Link.astro.
+ * The anchor uses the shared .orbit-cta variants (cta.css, taken from the same reference);
+ * this sheet holds only the root and the adjustments the shared base does not cover.
+ */
+
+/* div: hub-link flex w-full py-2 */
+.orbit-link {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    padding-block: var(--orbit-space-2);
+}
+
+/* ALIGNMENT.left: justify-start text-left */
+.orbit-link--align-left {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+/* ALIGNMENT.center: justify-center text-center */
+.orbit-link--align-center {
+    justify-content: center;
+    text-align: center;
+}
+
+/* ALIGNMENT.right: justify-end text-right */
+.orbit-link--align-right {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+/* primary_button: text-white, which the reference uses only on the accent background */
+.orbit-link__anchor.orbit-cta--primary {
+    color: var(--orbit-color-on-accent);
+}
+
+/* secondary_button: border uses the per-theme border width */
+.orbit-link__anchor.orbit-cta--secondary {
+    border-width: var(--orbit-border-width);
+}
