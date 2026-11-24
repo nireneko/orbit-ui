@@ -14,6 +14,16 @@ export interface RestrictedVideoPlayerComponentProps extends OrbitComponentConte
     };
 }
 
+const BLOCK = 'orbit-restricted-video-player';
+const RESTRICTION_PREFIX = 'HCP Restricted · ';
+const DURATION_UNIT = ' min';
+const DEFAULT_GATE_MESSAGE = 'HCP authentication required.';
+const DEFAULT_GATE_CTA_LABEL = 'Sign in';
+
+/**
+ * HCP-restricted video card. It never embeds the video: unauthorized visitors see the
+ * `fallback_unauthorized` gate, and the host decides whether to play it.
+ */
 export function RestrictedVideoPlayer({
     provider = 'vimeo_enterprise',
     vimeo_video_id = '123456789',
@@ -27,65 +37,38 @@ export function RestrictedVideoPlayer({
         <div
             data-orbit-block="RestrictedVideoPlayer"
             data-orbit-editor-mode={editorMode ? 'true' : 'false'}
-            className="orbit-container"
+            className={BLOCK}
         >
-            <div className="orbit-card" style={{ padding: '2rem' }}>
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '0.75rem',
-                    }}
-                >
-                    <span
-                        style={{
-                            fontSize: '0.75rem',
-                            fontWeight: 700,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.05em',
-                        }}
-                    >
-                        HCP Restricted · {provider} ({vimeo_video_id})
-                    </span>
-                    <span style={{ fontSize: '0.75rem', opacity: 0.75 }}>
-                        {duration_minutes} min
-                    </span>
-                </div>
-
-                <h3
-                    className="orbit-heading"
-                    style={{ fontSize: '1.375rem', fontWeight: 700, marginBottom: '0.5rem' }}
-                >
-                    {title}
-                </h3>
-
-                {isRenderableContent(disclaimer_text) && (
-                    <p style={{ fontSize: '0.875rem', opacity: 0.8, marginBottom: '1rem' }}>
-                        {disclaimer_text}
-                    </p>
-                )}
-
-                {fallback_unauthorized && (
-                    <div
-                        style={{
-                            padding: '1rem',
-                            border: 'var(--orbit-border-width) solid var(--orbit-color-border)',
-                            borderRadius: 'var(--orbit-radius-base)',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            gap: '1rem',
-                        }}
-                    >
-                        <span style={{ fontSize: '0.875rem' }}>
-                            {fallback_unauthorized.message ?? 'HCP authentication required.'}
+            <div className={`${BLOCK}__inner`}>
+                <div className={`${BLOCK}__card`}>
+                    <div className={`${BLOCK}__meta`}>
+                        <span className={`${BLOCK}__restriction`}>
+                            {RESTRICTION_PREFIX}
+                            {provider} ({vimeo_video_id})
                         </span>
-                        <span className="orbit-btn-primary">
-                            {fallback_unauthorized.login_cta_label ?? 'Sign in'}
+                        <span className={`${BLOCK}__duration`}>
+                            {duration_minutes}
+                            {DURATION_UNIT}
                         </span>
                     </div>
-                )}
+
+                    <h3 className={`${BLOCK}__title`}>{title}</h3>
+
+                    {isRenderableContent(disclaimer_text) && (
+                        <p className={`${BLOCK}__disclaimer`}>{disclaimer_text}</p>
+                    )}
+
+                    {fallback_unauthorized && (
+                        <div className={`${BLOCK}__gate`}>
+                            <span className={`${BLOCK}__gate-message`}>
+                                {fallback_unauthorized.message ?? DEFAULT_GATE_MESSAGE}
+                            </span>
+                            <span className={`${BLOCK}__gate-cta`}>
+                                {fallback_unauthorized.login_cta_label ?? DEFAULT_GATE_CTA_LABEL}
+                            </span>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
