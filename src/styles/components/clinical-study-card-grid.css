@@ -1,1 +1,111 @@
-/* ClinicalStudyCardGrid: no component rules yet. Its port fills this file (see docs/design-port.md). */
+/*
+ * ClinicalStudyCardGrid.
+ * No Astro reference: the previous inline sizes mapped to the nearest token (docs/design-port.md).
+ * One column by default, two from 48rem, the `columns` value (2, 3 or 4) from 64rem.
+ */
+
+.orbit-clinical-study-card-grid {
+    width: 100%;
+    padding-block: var(--orbit-space-8);
+}
+
+.orbit-clinical-study-card-grid__inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--orbit-container-max-width);
+    margin-inline: auto;
+    padding-inline: var(--orbit-space-4);
+}
+
+.orbit-clinical-study-card-grid__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--orbit-space-6);
+}
+
+.orbit-clinical-study-card-grid__card {
+    box-sizing: border-box;
+    padding: var(--orbit-space-6);
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-lg);
+    background-color: var(--orbit-color-surface);
+    color: var(--orbit-color-text);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+.orbit-clinical-study-card-grid__badge {
+    display: inline-block;
+    margin-bottom: var(--orbit-space-2);
+    font-size: var(--orbit-font-size-xs);
+    line-height: var(--orbit-line-height-xs);
+    font-weight: var(--orbit-font-weight-bold);
+}
+
+.orbit-clinical-study-card-grid__title {
+    margin: 0;
+    margin-bottom: var(--orbit-space-2);
+    font-family: var(--orbit-font-heading);
+    font-size: var(--orbit-font-size-lg);
+    line-height: var(--orbit-line-height-lg);
+    font-weight: var(--orbit-font-weight-bold);
+    color: var(--orbit-color-text);
+}
+
+.orbit-clinical-study-card-grid__description {
+    margin: 0;
+    margin-bottom: var(--orbit-space-4);
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+}
+
+.orbit-clinical-study-card-grid__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--orbit-space-2);
+}
+
+/*
+ * Secondary button, formerly `.orbit-btn-secondary` from shell.css.
+ * Scoped to the actions row so it outranks `.orbit-theme-shell a` in shell.css.
+ */
+.orbit-clinical-study-card-grid__actions > .orbit-clinical-study-card-grid__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--orbit-space-5);
+    padding-block: var(--orbit-space-2-5);
+    border: var(--orbit-border-width) solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-button);
+    background-color: var(--orbit-color-surface);
+    font-weight: var(--orbit-font-weight-semibold);
+    color: var(--orbit-color-accent);
+    text-decoration-line: none;
+}
+
+.orbit-clinical-study-card-grid__actions > .orbit-clinical-study-card-grid__action:focus-visible {
+    outline: 2px solid var(--orbit-color-accent);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) {
+    .orbit-clinical-study-card-grid__actions > .orbit-clinical-study-card-grid__action:hover {
+        background-color: color-mix(in oklab, var(--orbit-color-accent) 5%, transparent);
+    }
+}
+
+@media (min-width: 48rem) {
+    .orbit-clinical-study-card-grid__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 64rem) {
+    .orbit-clinical-study-card-grid--columns-3 .orbit-clinical-study-card-grid__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .orbit-clinical-study-card-grid--columns-4 .orbit-clinical-study-card-grid__grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
