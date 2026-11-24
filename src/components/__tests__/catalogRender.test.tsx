@@ -221,7 +221,7 @@ describe('@orbit/ui 15 Component Catalog SSR Rendering', () => {
         );
         expect(previewHtml).toContain('<iframe');
         expect(previewHtml).toContain('youtube-nocookie.com/embed/dQw4w9WgXcQ');
-        expect(previewHtml).toContain('pointer-events:none');
+        expect(previewHtml).toContain('orbit-youtube__iframe--inert');
 
         const unresolvedEditorHtml = renderToStaticMarkup(
             React.createElement(YoutubeRenderer, {
