@@ -1,1 +1,72 @@
-/* CheckInScanner: no component rules yet. Its port fills this file (see docs/design-port.md). */
+/*
+ * CheckInScanner.
+ * No .astro reference: docs/design-port.md is the authority. Each former inline
+ * size maps to the nearest token of the scale; the comments give the old value.
+ */
+
+/* Own vertical padding: .orbit-section no longer adds it (TASK-15.31). */
+.orbit-check-in-scanner {
+    box-sizing: border-box;
+    padding-block: var(--orbit-space-8);
+}
+
+/* padding 1.75rem: space-6 on narrow screens, space-8 from md. */
+.orbit-check-in-scanner__card {
+    box-sizing: border-box;
+    padding: var(--orbit-space-6);
+}
+
+/* font-size 1.25rem, font-weight 700, margin-bottom 0.5rem */
+.orbit-check-in-scanner__title {
+    margin: 0;
+    margin-bottom: var(--orbit-space-2);
+    font-size: var(--orbit-font-size-xl);
+    line-height: var(--orbit-line-height-xl);
+    font-weight: var(--orbit-font-weight-bold);
+    overflow-wrap: anywhere;
+}
+
+/* font-size 0.875rem, opacity 0.8, margin-bottom 1rem */
+.orbit-check-in-scanner__message {
+    margin: 0;
+    margin-bottom: var(--orbit-space-4);
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    color: color-mix(in oklab, var(--orbit-color-text) 80%, transparent);
+}
+
+/* flex, gap 0.75rem. Stacked on narrow screens so the input never overflows. */
+.orbit-check-in-scanner__controls {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--orbit-space-3);
+}
+
+/* padding 0.5rem 0.75rem, rounded-hub-base, border border-hub-border */
+.orbit-check-in-scanner__input {
+    box-sizing: border-box;
+    width: 100%;
+    padding-block: var(--orbit-space-2);
+    padding-inline: var(--orbit-space-3);
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-base);
+}
+
+@media (min-width: 40rem) {
+    /* items-center: input and button side by side, as before. */
+    .orbit-check-in-scanner__controls {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .orbit-check-in-scanner__input {
+        width: auto;
+    }
+}
+
+@media (min-width: 48rem) {
+    .orbit-check-in-scanner__card {
+        padding: var(--orbit-space-8);
+    }
+}
