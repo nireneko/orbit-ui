@@ -16,13 +16,32 @@ Install pinned to a release tag via Git:
 }
 ```
 
-## Development
+## Development with Docker
+
+Every command runs inside the `node` service from `compose.yaml` (`node:22`, the repository mounted at `/app`, your host user, npm cache outside the working tree). Nothing needs Node installed on the host.
+
+Install, type-check and test, as from a clean clone:
 
 ```bash
-npm install
-npm run build
-npm test
+docker compose run --rm node sh -c "npm ci && npm run build && npm test"
 ```
+
+Single steps:
+
+```bash
+docker compose run --rm node npm ci          # install dependencies from package-lock.json
+docker compose run --rm node npm run build   # type-check (tsc --noEmit)
+docker compose run --rm node npm test        # run the Vitest suite once
+docker compose run --rm node npx vitest      # watch mode
+```
+
+The container runs as uid/gid `1000` by default. If your host ids differ (`id -u`, `id -g`), export them first so the files written to the repository stay yours:
+
+```bash
+export HOST_UID=$(id -u) HOST_GID=$(id -g)
+```
+
+Porting the reference design into components follows [`docs/design-port.md`](docs/design-port.md).
 
 ## Release Workflow
 

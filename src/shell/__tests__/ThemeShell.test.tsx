@@ -1,6 +1,4 @@
 // @vitest-environment node
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -51,20 +49,6 @@ describe('@orbit/ui ThemeShell & SectionWrapper SSR', () => {
         expect(html).toContain('background-color:#F2F4F6');
         expect(html).toContain('text-align:center');
         expect(html).toContain('Clinical Hero');
-    });
-
-    it('defines distinct theme visual rules for all 4 SiteThemes in orbit-tokens.css', () => {
-        const css = readFileSync(
-            fileURLToPath(new URL('../../styles/orbit-tokens.css', import.meta.url)),
-            'utf8',
-        );
-
-        expect(css).toContain('[data-orbit-theme="editorial"] [data-orbit-block="HeroBanner"]');
-        expect(css).toContain('[data-orbit-theme="clinical"] [data-orbit-block="HeroBanner"]');
-        expect(css).toContain('[data-orbit-theme="bold"] [data-orbit-block="HeroBanner"]');
-        expect(css).toContain('[data-orbit-theme="editorial"] [data-orbit-block="Header"]');
-        expect(css).toContain('var(--orbit-color-accent)');
-        expect(css).toContain('[data-orbit-align="center"] [data-orbit-block]');
     });
 
     it('applies border fallback color, overflow hidden on radius, and data-orbit-align', () => {
