@@ -8,7 +8,7 @@ Install from `#v0.4.0-rc.3`; everything else in 0.4.0-rc.1 and rc.2 applies unch
 
 ### Fixed
 
-- Primary CTA label: inside `ThemeShell` the shell link rule (`.orbit-theme-shell a`) painted it in the accent colour, so the label was invisible on the accent background. It now uses `--orbit-color-on-accent` (it used `--orbit-color-background`) with enough specificity to win inside the shell.
+- Primary CTA label: inside `ThemeShell` the shell link rule (`.orbit-theme-shell a`) painted it in the accent colour, so the label was invisible on the accent background. It now uses `--orbit-color-on-accent` (it used `--orbit-color-background`) with enough specificity to win inside the shell: the rule is now `.orbit-cta.orbit-cta--primary` (0,2,0), so a host or component override of the primary label colour needs two classes.
 - CTA hover effects apply only under `@media (hover: hover)`, so touch devices no longer keep a stuck hover state; the secondary hover tint mixes in `oklab`, as the reference does.
 - Header submenu links keep the muted text colour inside `ThemeShell` instead of the accent colour.
 
