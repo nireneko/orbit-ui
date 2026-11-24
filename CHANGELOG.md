@@ -2,6 +2,12 @@
 
 All notable changes to `@orbit/ui` are recorded here. Versions follow [Semantic Versioning](https://semver.org/); prereleases carry an `-rc.N` suffix and are tagged on the integration branch before the final release is tagged on `main`.
 
+## [0.4.0]
+
+Final release of EPIC-15 phase 2 (one render engine). It ships the same code as `0.4.0-rc.3`; the notes of rc.1, rc.2 and rc.3 below describe every change since v0.3.0.
+
+Install from `#v0.4.0`: `"@orbit/ui": "https://github.com/nireneko/orbit-ui.git#v0.4.0"`.
+
 ## [0.4.0-rc.3]
 
 Install from `#v0.4.0-rc.3`; everything else in 0.4.0-rc.1 and rc.2 applies unchanged.
