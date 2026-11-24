@@ -22,22 +22,14 @@ export function UserFavoriteTracker({
             data-orbit-block="UserFavoriteTracker"
             data-orbit-target-type={target_type}
             data-orbit-target-id={safeTargetIdAttr}
-            className="orbit-container"
+            className="orbit-user-favorite-tracker orbit-container"
         >
-            <div
-                className="orbit-card"
-                style={{
-                    padding: '1rem 1.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                }}
-            >
-                <div>
-                    <strong style={{ display: 'block' }}>
+            <div className="orbit-user-favorite-tracker__card orbit-card">
+                <div className="orbit-user-favorite-tracker__body">
+                    <strong className="orbit-user-favorite-tracker__label">
                         Bookmark ({target_type}: {target_id})
                     </strong>
-                    <span style={{ fontSize: '0.75rem', opacity: 0.75 }}>
+                    <span className="orbit-user-favorite-tracker__hint">
                         {require_auth ? 'Requires authenticated user' : 'Public bookmark'}
                     </span>
                 </div>

@@ -1,0 +1,72 @@
+/*
+ * Youtube.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/media/Youtube.astro.
+ * The reference has no width or theme variants, so neither does this sheet.
+ */
+
+/* figure: hub-youtube w-full (figure margins reset, no vertical padding in the reference) */
+.orbit-youtube {
+    width: 100%;
+    margin: 0;
+}
+
+/*
+ * hub-youtube__frame: w-full overflow-hidden rounded-hub-lg border border-hub-border bg-black shadow-hub-card
+ * The aspect ratio comes from the aspect_ratio prop and is set inline.
+ */
+.orbit-youtube__frame {
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-lg);
+    background-color: #000;
+    box-shadow: var(--orbit-card-shadow);
+}
+
+/* iframe: h-full w-full (display and border reset that the reference got from preflight) */
+.orbit-youtube__iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* Editor preview: the canvas keeps the pointer instead of the player. */
+.orbit-youtube__iframe--inert {
+    pointer-events: none;
+}
+
+/* hub-youtube__caption: mt-2 text-sm text-hub-text/70 */
+.orbit-youtube__caption {
+    margin-top: var(--orbit-space-2);
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    color: color-mix(in oklab, var(--orbit-color-text) 70%, transparent);
+}
+
+/* Editor-only placeholder (not in the reference): shown until the video resolves or the preview is on. */
+.orbit-youtube__placeholder {
+    padding: var(--orbit-space-10);
+    text-align: center;
+}
+
+.orbit-youtube__placeholder-title {
+    display: block;
+    margin-bottom: var(--orbit-space-2);
+    font-family: var(--orbit-font-heading);
+}
+
+.orbit-youtube__placeholder-meta {
+    display: block;
+    margin-bottom: var(--orbit-space-3);
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    opacity: 0.75;
+}
+
+/* Editor-only DAM trigger under the preview iframe. */
+.orbit-youtube__dam-trigger {
+    margin-top: var(--orbit-space-2);
+    text-align: center;
+}

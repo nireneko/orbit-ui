@@ -1,0 +1,101 @@
+/*
+ * DocumentDownloadCenter.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/media/DocumentDownloadCenter.astro.
+ * One column at every width: the reference has no breakpoints.
+ */
+
+/* section: w-full py-8 */
+.orbit-document-download-center {
+    width: 100%;
+    padding-block: var(--orbit-space-8);
+}
+
+/* mx-auto w-full max-w-hub-container px-4 */
+.orbit-document-download-center__inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--orbit-container-max-width);
+    margin-inline: auto;
+    padding-inline: var(--orbit-space-4);
+}
+
+/* font-hub-heading text-2xl font-bold text-hub-primary */
+.orbit-document-download-center__heading {
+    margin: 0;
+    font-family: var(--orbit-font-heading);
+    font-size: var(--orbit-font-size-2xl);
+    line-height: var(--orbit-line-height-2xl);
+    font-weight: var(--orbit-font-weight-bold);
+    color: var(--orbit-color-accent);
+}
+
+/*
+ * mt-4 list-none divide-y divide-hub-border rounded-hub-base border border-hub-border
+ * bg-hub-surface p-0 px-4 shadow-hub-card
+ */
+.orbit-document-download-center__list {
+    margin: 0;
+    margin-top: var(--orbit-space-4);
+    padding: 0;
+    padding-inline: var(--orbit-space-4);
+    list-style-type: none;
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-base);
+    background-color: var(--orbit-color-surface);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+/* divide-y divide-hub-border */
+.orbit-document-download-center__list > :not(:last-child) {
+    border-bottom: 1px solid var(--orbit-color-border);
+}
+
+/* flex flex-wrap items-center justify-between gap-3 py-4 */
+.orbit-document-download-center__item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--orbit-space-3);
+    padding-block: var(--orbit-space-4);
+}
+
+/* font-semibold text-hub-primary underline */
+.orbit-document-download-center__link {
+    font-weight: var(--orbit-font-weight-semibold);
+    color: var(--orbit-color-accent);
+    text-decoration-line: underline;
+}
+
+/* mt-1 text-sm text-hub-text/70 */
+.orbit-document-download-center__details {
+    margin: 0;
+    margin-top: var(--orbit-space-1);
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    color: color-mix(in oklab, var(--orbit-color-text) 70%, transparent);
+}
+
+/*
+ * rounded-hub-btn bg-hub-primary px-4 py-2 text-sm font-semibold text-white no-underline.
+ * text-white sits on the accent background, so it maps to --orbit-color-on-accent.
+ * Scoped to the item so it outranks `.orbit-theme-shell a` in shell.css.
+ */
+.orbit-document-download-center__item > .orbit-document-download-center__action {
+    padding-inline: var(--orbit-space-4);
+    padding-block: var(--orbit-space-2);
+    border-radius: var(--orbit-radius-button);
+    background-color: var(--orbit-color-accent);
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    font-weight: var(--orbit-font-weight-semibold);
+    color: var(--orbit-color-on-accent);
+    text-decoration-line: none;
+}
+
+@media (hover: hover) {
+    /* hover:opacity-90 */
+    .orbit-document-download-center__item > .orbit-document-download-center__action:hover {
+        opacity: 0.9;
+    }
+}

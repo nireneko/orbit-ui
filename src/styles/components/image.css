@@ -1,0 +1,47 @@
+/*
+ * Image.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/media/Image.astro.
+ * The aspect ratio comes from the `aspect_ratio` prop, so it is set inline on the frame.
+ */
+
+/* figure: w-full (plus the figure margin reset that Tailwind preflight provided) */
+.orbit-image {
+    width: 100%;
+    margin: 0;
+}
+
+/* overflow-hidden rounded-hub-lg border border-hub-border shadow-hub-card */
+.orbit-image__frame {
+    position: relative;
+    overflow: hidden;
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-lg);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+/* h-full w-full object-cover (plus display: block from Tailwind preflight) */
+.orbit-image__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.orbit-image__img--selectable {
+    cursor: pointer;
+}
+
+/* Editor-only: places the inline DAM trigger over the image. */
+.orbit-image__dam-trigger {
+    position: absolute;
+    top: var(--orbit-space-3);
+    right: var(--orbit-space-3);
+}
+
+/* mt-2 text-sm text-hub-text/70 */
+.orbit-image__caption {
+    margin-top: var(--orbit-space-2);
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    color: color-mix(in oklab, var(--orbit-color-text) 70%, transparent);
+}

@@ -1,0 +1,16 @@
+# Development environment: every npm command runs inside this container.
+# Usage: docker compose run --rm node sh -c "npm ci && npm run build && npm test"
+services:
+  node:
+    image: node:22
+    working_dir: /app
+    # Run as the host user so node_modules and generated files stay owned by you.
+    # Set HOST_UID / HOST_GID when your ids are not 1000 (see README).
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    environment:
+      # HOME and the npm cache live in the container, outside the working tree.
+      HOME: /tmp/home
+      npm_config_cache: /tmp/home/.npm
+      npm_config_update_notifier: "false"
+    volumes:
+      - .:/app

@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import {
-    isRenderableContent,
-    renderInlineDamTrigger,
-    resolveDamAssetUrl,
-} from './Header';
+import { isRenderableContent } from '../../internal/content';
+import { resolveDamAssetUrl } from '../../internal/dam';
+import { renderInlineDamTrigger } from '../../internal/InlineDamTrigger';
 
 export interface SlideshowSlide {
     dam_asset_id?: string;
@@ -19,7 +17,59 @@ export interface InteractiveSlideshowComponentProps extends OrbitComponentContex
     slides?: SlideshowSlide[];
 }
 
+export interface AutoplayOptions {
+    autoplay: boolean;
+    intervalSeconds: number | undefined;
+    editorMode: boolean;
+    slideCount: number;
+}
+
+const BLOCK = 'orbit-interactive-slideshow';
+const SLIDE_DAM_TYPES = ['IMAGE', 'INFOGRAPHIC'];
+const DEFAULT_SLIDE_ALT = 'Slide';
+const PLACEHOLDER_SLIDE: SlideshowSlide = { dam_asset_id: 'dam_default_slide', alt_text: DEFAULT_SLIDE_ALT, caption: '' };
+const REGION_ROLE_DESCRIPTION = 'carousel';
+const REGION_LABEL = 'Slideshow';
+const SLIDE_ROLE_DESCRIPTION = 'slide';
+const PREVIOUS_LABEL = 'Previous';
+const NEXT_LABEL = 'Next';
+/** Bounds and fallback of `autoplay_interval_seconds` in the Symfony schema. */
+const MIN_INTERVAL_SECONDS = 3;
+const MAX_INTERVAL_SECONDS = 30;
+const DEFAULT_INTERVAL_SECONDS = 5;
+
+/**
+ * Milliseconds between automatic advances, or `null` when nothing is scheduled:
+ * autoplay off, the editor canvas (a moving track blocks editing) or a single slide.
+ * An interval outside the schema range falls back to 5 seconds, as in the reference.
+ */
+export function getAutoplayIntervalMs({ autoplay, intervalSeconds, editorMode, slideCount }: AutoplayOptions): number | null {
+    if (!autoplay || editorMode || slideCount < 2) {
+        return null;
+    }
+
+    const seconds =
+        typeof intervalSeconds === 'number' &&
+        Number.isInteger(intervalSeconds) &&
+        intervalSeconds >= MIN_INTERVAL_SECONDS &&
+        intervalSeconds <= MAX_INTERVAL_SECONDS
+            ? intervalSeconds
+            : DEFAULT_INTERVAL_SECONDS;
+
+    return seconds * 1000;
+}
+
+/**
+ * Scroll-snap track holding every slide, with previous/next controls and optional autoplay.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/media/InteractiveSlideshow.astro.
+ *
+ * The markup never depends on client state, so the server render matches the first client
+ * render (`client:visible`) and the track still scrolls natively without JavaScript.
+ * The controls and the autoplay only move the track, after mount.
+ */
 export function InteractiveSlideshow({
+    autoplay = false,
+    autoplay_interval_seconds,
     aria_live_mode = 'polite',
     slides = [],
     editorMode = false,
@@ -27,109 +77,151 @@ export function InteractiveSlideshow({
     onInlineSelectDamAsset,
     selectAssetLabel,
 }: InteractiveSlideshowComponentProps): React.ReactElement {
-    const safeSlides = Array.isArray(slides) && slides.length > 0
-        ? slides
-        : [{ dam_asset_id: 'dam_default_slide', alt_text: 'Slide', caption: '' }];
+    const safeSlides = Array.isArray(slides) && slides.length > 0 ? slides : [PLACEHOLDER_SLIDE];
+    const slideCount = safeSlides.length;
+    const canSelectAsset = editorMode && typeof onInlineSelectDamAsset === 'function';
+    const imageClassName = canSelectAsset ? `${BLOCK}__image ${BLOCK}__image--selectable` : `${BLOCK}__image`;
 
-    const [activeIndex, setActiveIndex] = useState(0);
-    const activeSlide: SlideshowSlide = safeSlides[activeIndex] ??
-        safeSlides[0] ?? { dam_asset_id: 'dam_default_slide', alt_text: 'Slide', caption: '' };
-    const safeAlt =
-        typeof activeSlide.alt_text === 'string' ? activeSlide.alt_text : 'Slide';
+    const rootRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+    const indexRef = useRef(0);
+
+    const goTo = useCallback(
+        (next: number) => {
+            const track = trackRef.current;
+
+            if (!track) {
+                return;
+            }
+
+            indexRef.current = (next + slideCount) % slideCount;
+            const slide = track.children.item(indexRef.current);
+
+            if (!(slide instanceof HTMLElement)) {
+                return;
+            }
+
+            // Scrolls only the track (centred, as the reference's scrollIntoView), never the page.
+            const trackRect = track.getBoundingClientRect();
+            const slideRect = slide.getBoundingClientRect();
+            const left = track.scrollLeft + slideRect.left - trackRect.left - (trackRect.width - slideRect.width) / 2;
+
+            track.scrollTo({ left, behavior: 'smooth' });
+        },
+        [slideCount],
+    );
+
+    const intervalMs = getAutoplayIntervalMs({
+        autoplay,
+        intervalSeconds: autoplay_interval_seconds,
+        editorMode,
+        slideCount,
+    });
+
+    useEffect(() => {
+        const root = rootRef.current;
+
+        if (intervalMs === null || !root) {
+            return undefined;
+        }
+
+        const timer = window.setInterval(() => goTo(indexRef.current + 1), intervalMs);
+        // As in the reference, pointer or focus inside the slideshow stops the autoplay for good.
+        const stop = (): void => window.clearInterval(timer);
+
+        root.addEventListener('mouseenter', stop);
+        root.addEventListener('focusin', stop);
+
+        return () => {
+            stop();
+            root.removeEventListener('mouseenter', stop);
+            root.removeEventListener('focusin', stop);
+        };
+    }, [intervalMs, goTo]);
 
     return (
         <div
+            ref={rootRef}
+            className={BLOCK}
             data-orbit-block="InteractiveSlideshow"
-            aria-live={aria_live_mode}
-            className="orbit-container"
+            role="region"
+            aria-roledescription={REGION_ROLE_DESCRIPTION}
+            aria-label={REGION_LABEL}
         >
-            <div className="orbit-card" style={{ padding: '1.5rem' }}>
-                <div style={{ position: 'relative' }}>
-                    <img
-                        src={resolveDamAssetUrl(activeSlide.dam_asset_id, resolveAssetUrl)}
-                        alt={safeAlt}
-                        onClick={
-                            editorMode && typeof onInlineSelectDamAsset === 'function'
-                                ? (event) => {
-                                      event.preventDefault();
-                                      event.stopPropagation();
-                                      onInlineSelectDamAsset({
-                                          propPath: `slides[${activeIndex}].dam_asset_id`,
-                                          currentAssetId: activeSlide.dam_asset_id,
-                                          allowedDamTypes: ['IMAGE', 'INFOGRAPHIC'],
-                                          label: selectAssetLabel,
-                                      });
-                                  }
-                                : undefined
-                        }
-                        style={{
-                            width: '100%',
-                            borderRadius: 'var(--orbit-radius-base)',
-                            display: 'block',
-                            cursor:
-                                editorMode && typeof onInlineSelectDamAsset === 'function'
-                                    ? 'pointer'
-                                    : undefined,
-                        }}
-                    />
-                    {editorMode && typeof onInlineSelectDamAsset === 'function' && (
-                        <div
-                            style={{
-                                position: 'absolute',
-                                top: '0.75rem',
-                                right: '0.75rem',
-                            }}
+            {/* tabIndex lets keyboard users scroll the track, which holds no focusable content outside the editor. */}
+            <div ref={trackRef} className={`${BLOCK}__track`} aria-live={aria_live_mode} tabIndex={0}>
+                {safeSlides.map((slide, index) => {
+                    const propPath = `slides[${index}].dam_asset_id`;
+                    const alt = typeof slide.alt_text === 'string' ? slide.alt_text : DEFAULT_SLIDE_ALT;
+
+                    return (
+                        <figure
+                            key={index}
+                            className={`${BLOCK}__slide`}
+                            aria-roledescription={SLIDE_ROLE_DESCRIPTION}
+                            aria-label={`${index + 1} of ${slideCount}`}
                         >
-                            {renderInlineDamTrigger({
-                                editorMode,
-                                propPath: `slides[${activeIndex}].dam_asset_id`,
-                                currentAssetId: activeSlide.dam_asset_id,
-                                allowedDamTypes: ['IMAGE', 'INFOGRAPHIC'],
-                                label: selectAssetLabel,
-                                onInlineSelectDamAsset,
-                            })}
-                        </div>
-                    )}
-                </div>
-                {isRenderableContent(activeSlide.caption) && (
-                    <p style={{ marginTop: '0.75rem', fontSize: '0.875rem' }}>
-                        {activeSlide.caption}
-                    </p>
-                )}
-                {safeSlides.length > 1 && (
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            marginTop: '1rem',
-                        }}
-                    >
-                        <button
-                            type="button"
-                            className="orbit-btn-secondary"
-                            onClick={() =>
-                                setActiveIndex(
-                                    (prev) => (prev - 1 + safeSlides.length) % safeSlides.length,
-                                )
-                            }
-                        >
-                            Previous
-                        </button>
-                        <span style={{ fontSize: '0.75rem', alignSelf: 'center' }}>
-                            {activeIndex + 1} / {safeSlides.length}
-                        </span>
-                        <button
-                            type="button"
-                            className="orbit-btn-secondary"
-                            onClick={() =>
-                                setActiveIndex((prev) => (prev + 1) % safeSlides.length)
-                            }
-                        >
-                            Next
-                        </button>
-                    </div>
-                )}
+                            <img
+                                className={imageClassName}
+                                src={resolveDamAssetUrl(slide.dam_asset_id, resolveAssetUrl)}
+                                alt={alt}
+                                loading="lazy"
+                                decoding="async"
+                                onClick={
+                                    canSelectAsset
+                                        ? (event) => {
+                                              event.preventDefault();
+                                              event.stopPropagation();
+                                              onInlineSelectDamAsset({
+                                                  propPath,
+                                                  currentAssetId: slide.dam_asset_id,
+                                                  allowedDamTypes: SLIDE_DAM_TYPES,
+                                                  label: selectAssetLabel,
+                                              });
+                                          }
+                                        : undefined
+                                }
+                            />
+                            {canSelectAsset && (
+                                <div className={`${BLOCK}__dam-trigger`}>
+                                    {renderInlineDamTrigger({
+                                        editorMode,
+                                        propPath,
+                                        currentAssetId: slide.dam_asset_id,
+                                        allowedDamTypes: SLIDE_DAM_TYPES,
+                                        label: selectAssetLabel,
+                                        onInlineSelectDamAsset,
+                                    })}
+                                </div>
+                            )}
+                            {isRenderableContent(slide.caption) && (
+                                <figcaption className={`${BLOCK}__caption`}>{slide.caption}</figcaption>
+                            )}
+                        </figure>
+                    );
+                })}
             </div>
+
+            {slideCount > 1 && (
+                <div className={`${BLOCK}__controls`}>
+                    <button
+                        type="button"
+                        className={`${BLOCK}__prev`}
+                        aria-label={PREVIOUS_LABEL}
+                        onClick={() => goTo(indexRef.current - 1)}
+                    >
+                        ‹
+                    </button>
+                    <button
+                        type="button"
+                        className={`${BLOCK}__next`}
+                        aria-label={NEXT_LABEL}
+                        onClick={() => goTo(indexRef.current + 1)}
+                    >
+                        ›
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

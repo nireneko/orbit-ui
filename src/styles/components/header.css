@@ -1,0 +1,134 @@
+/*
+ * Header, ported from orbit-hub-builder@86abe78:src/components/catalog/layout/Header.astro.
+ * The reference has no width breakpoints and no theme variants: it is one flexible row
+ * that follows the theme through the --orbit-* tokens.
+ */
+
+/* w-full border-b border-hub-border bg-hub-surface/95 backdrop-blur */
+.orbit-header {
+    box-sizing: border-box;
+    width: 100%;
+    border-bottom: var(--orbit-border-width) solid var(--orbit-color-border);
+    background-color: color-mix(in oklab, var(--orbit-color-surface) 95%, transparent);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+/* sticky top-0 z-40 */
+.orbit-header--sticky {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+/* mx-auto flex w-full max-w-hub-container items-center justify-between gap-6 px-4 py-4 */
+.orbit-header__inner {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--orbit-space-6);
+    width: 100%;
+    max-width: var(--orbit-container-max-width);
+    margin-inline: auto;
+    padding-inline: var(--orbit-space-4);
+    padding-block: var(--orbit-space-4);
+}
+
+/* flex items-center gap-3 font-hub-heading text-xl font-semibold text-hub-primary no-underline */
+.orbit-header__home {
+    display: flex;
+    align-items: center;
+    gap: var(--orbit-space-3);
+    font-family: var(--orbit-font-heading);
+    font-size: var(--orbit-font-size-xl);
+    line-height: var(--orbit-line-height-xl);
+    font-weight: var(--orbit-font-weight-semibold);
+    color: var(--orbit-color-accent);
+    text-decoration-line: none;
+}
+
+/* h-10 w-auto */
+.orbit-header__logo {
+    display: block;
+    height: var(--orbit-space-10);
+    width: auto;
+}
+
+/* list-none p-0 (plus the margin reset Tailwind preflight gave the reference) */
+.orbit-header__nav-list,
+.orbit-header__submenu {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+/* flex items-center gap-6 */
+.orbit-header__nav-list {
+    display: flex;
+    align-items: center;
+    gap: var(--orbit-space-6);
+}
+
+/* text-sm font-medium text-hub-primary no-underline */
+.orbit-header__nav-link {
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    font-weight: var(--orbit-font-weight-medium);
+    color: var(--orbit-color-accent);
+    text-decoration-line: none;
+}
+
+/* mt-2 */
+.orbit-header__submenu {
+    margin-top: var(--orbit-space-2);
+}
+
+/* space-y-1 */
+.orbit-header__submenu > :not(:last-child) {
+    margin-block-end: var(--orbit-space-1);
+}
+
+/*
+ * text-sm text-hub-text/75 no-underline. Scoped to the submenu so the muted colour
+ * outranks `.orbit-theme-shell a` in shell.css.
+ */
+.orbit-header__submenu .orbit-header__submenu-link {
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+    color: color-mix(in oklab, var(--orbit-color-text) 75%, transparent);
+    text-decoration-line: none;
+}
+
+/*
+ * CTA: px-4 py-2 text-sm, on top of the shared .orbit-cta variants (cta.variant is in the
+ * schema, so the variant is kept). The reference's text-white on the filled button maps
+ * to --orbit-color-on-accent.
+ */
+.orbit-header__cta {
+    font-size: var(--orbit-font-size-sm);
+    line-height: var(--orbit-line-height-sm);
+}
+
+.orbit-header__cta.orbit-cta--primary,
+.orbit-header__cta.orbit-cta--secondary {
+    padding-inline: var(--orbit-space-4);
+    padding-block: var(--orbit-space-2);
+}
+
+.orbit-header__cta.orbit-cta--primary {
+    color: var(--orbit-color-on-accent);
+}
+
+@media (hover: hover) {
+    /* hover:underline */
+    .orbit-header__nav-link:hover {
+        text-decoration-line: underline;
+    }
+
+    /* hover:text-hub-primary hover:underline */
+    .orbit-header__submenu-link:hover {
+        color: var(--orbit-color-accent);
+        text-decoration-line: underline;
+    }
+}

@@ -1,0 +1,62 @@
+/*
+ * Shared call-to-action base (`renderCtaButton`).
+ * Ported from VARIANT_CLASSES in orbit-hub-builder@86abe78:src/components/catalog/content/Link.astro.
+ * Context-dependent size and colour adjustments (for example on the hero band) belong in
+ * each component's own stylesheet.
+ */
+.orbit-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.orbit-cta:focus-visible {
+    outline: 2px solid var(--orbit-color-accent);
+    outline-offset: 2px;
+}
+
+.orbit-cta--primary {
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--orbit-radius-button);
+    background-color: var(--orbit-color-accent);
+    text-decoration: none;
+}
+
+/*
+ * text-white on the accent background maps to --orbit-color-on-accent. Two classes so the
+ * label outranks `.orbit-theme-shell a` (shell.css), which would paint it in the accent colour.
+ */
+.orbit-cta.orbit-cta--primary {
+    color: var(--orbit-color-on-accent);
+}
+
+.orbit-cta--secondary {
+    padding: 0.625rem 1.25rem;
+    border: 1px solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-button);
+    color: var(--orbit-color-accent);
+    text-decoration: none;
+}
+
+.orbit-cta--link {
+    color: var(--orbit-color-accent);
+    text-decoration: underline;
+}
+
+@media (hover: hover) {
+    /* primary_button: hover:opacity-90 */
+    .orbit-cta--primary:hover {
+        opacity: 0.9;
+    }
+
+    /* secondary_button: hover:bg-hub-primary/5 */
+    .orbit-cta--secondary:hover {
+        background-color: color-mix(in oklab, var(--orbit-color-accent) 5%, transparent);
+    }
+
+    /* link: hover:opacity-80 */
+    .orbit-cta--link:hover {
+        opacity: 0.8;
+    }
+}

@@ -1,0 +1,108 @@
+/*
+ * ImageAndText.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/layout/ImageAndText.astro.
+ */
+
+/* section: w-full py-12 + BACKGROUND[background_variant] */
+.orbit-image-and-text {
+    width: 100%;
+    padding-block: var(--orbit-space-12);
+}
+
+/* bg-hub-bg */
+.orbit-image-and-text--background-default {
+    background-color: var(--orbit-color-background);
+}
+
+/* bg-hub-surface */
+.orbit-image-and-text--background-muted {
+    background-color: var(--orbit-color-surface);
+}
+
+/* bg-hub-primary/10 */
+.orbit-image-and-text--background-accent {
+    background-color: color-mix(in oklab, var(--orbit-color-accent) 10%, transparent);
+}
+
+/* mx-auto grid w-full max-w-hub-container items-center gap-8 px-4 md:grid-cols-2 */
+.orbit-image-and-text__inner {
+    box-sizing: border-box;
+    display: grid;
+    align-items: center;
+    gap: var(--orbit-space-8);
+    width: 100%;
+    max-width: var(--orbit-container-max-width);
+    margin-inline: auto;
+    padding-inline: var(--orbit-space-4);
+}
+
+/* Holds the image and, in the editor, the inline DAM trigger. */
+.orbit-image-and-text__media {
+    position: relative;
+}
+
+/* w-full rounded-hub-lg border border-hub-border object-cover shadow-hub-card */
+.orbit-image-and-text__image {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-lg);
+    box-shadow: var(--orbit-card-shadow);
+    object-fit: cover;
+}
+
+.orbit-image-and-text__image--selectable {
+    cursor: pointer;
+}
+
+.orbit-image-and-text__dam-trigger {
+    position: absolute;
+    top: var(--orbit-space-3);
+    right: var(--orbit-space-3);
+}
+
+/* flex flex-col gap-4 */
+.orbit-image-and-text__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--orbit-space-4);
+}
+
+/* font-hub-heading text-3xl font-bold text-hub-primary */
+.orbit-image-and-text__heading {
+    margin: 0;
+    font-family: var(--orbit-font-heading);
+    font-size: var(--orbit-font-size-3xl);
+    line-height: var(--orbit-line-height-3xl);
+    font-weight: var(--orbit-font-weight-bold);
+    color: var(--orbit-color-accent);
+}
+
+/* text-lg text-hub-text/85 */
+.orbit-image-and-text__body {
+    margin: 0;
+    font-size: var(--orbit-font-size-lg);
+    line-height: var(--orbit-line-height-lg);
+    color: color-mix(in oklab, var(--orbit-color-text) 85%, transparent);
+}
+
+/* CTA w-fit: keeps the shared CTA from stretching across the flex column. */
+.orbit-image-and-text__content > .orbit-cta {
+    width: fit-content;
+}
+
+@media (min-width: 48rem) {
+    .orbit-image-and-text__inner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* image: md:order-2, text: md:order-1 when the image is on the right */
+    .orbit-image-and-text--image-right .orbit-image-and-text__media {
+        order: 2;
+    }
+
+    .orbit-image-and-text--image-right .orbit-image-and-text__content {
+        order: 1;
+    }
+}

@@ -1,0 +1,50 @@
+/*
+ * UserFavoriteTracker.
+ * No .astro reference: docs/design-port.md is the authority. Each former inline
+ * size maps to the nearest token of the scale; the comments give the old value.
+ */
+
+/* Own vertical padding: .orbit-section no longer adds it (TASK-15.31). */
+.orbit-user-favorite-tracker {
+    box-sizing: border-box;
+    padding-block: var(--orbit-space-8);
+}
+
+/*
+ * padding 1rem 1.5rem, flex items-center justify-between.
+ * Stacked on narrow screens so the button never squeezes the label.
+ */
+.orbit-user-favorite-tracker__card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--orbit-space-3);
+    padding-block: var(--orbit-space-4);
+    padding-inline: var(--orbit-space-6);
+}
+
+.orbit-user-favorite-tracker__body {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* strong display block */
+.orbit-user-favorite-tracker__label {
+    display: block;
+}
+
+/* font-size 0.75rem, opacity 0.75 */
+.orbit-user-favorite-tracker__hint {
+    font-size: var(--orbit-font-size-xs);
+    line-height: var(--orbit-line-height-xs);
+    color: color-mix(in oklab, var(--orbit-color-text) 75%, transparent);
+}
+
+@media (min-width: 40rem) {
+    .orbit-user-favorite-tracker__card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

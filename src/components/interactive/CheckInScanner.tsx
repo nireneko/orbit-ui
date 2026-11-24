@@ -20,30 +20,19 @@ export function CheckInScanner({
         <div
             data-orbit-block="CheckInScanner"
             data-orbit-event-id={safeEventIdAttr}
-            className="orbit-container"
+            className="orbit-check-in-scanner orbit-container"
         >
-            <div className="orbit-card" style={{ padding: '1.75rem' }}>
-                <h3
-                    className="orbit-heading"
-                    style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}
-                >
-                    Event Check-In ({event_id})
-                </h3>
-                <p style={{ fontSize: '0.875rem', opacity: 0.8, marginBottom: '1rem' }}>
-                    {success_message}
-                </p>
+            <div className="orbit-check-in-scanner__card orbit-card">
+                <h3 className="orbit-check-in-scanner__title orbit-heading">Event Check-In ({event_id})</h3>
+                <p className="orbit-check-in-scanner__message">{success_message}</p>
                 {allow_manual_code && (
-                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                    <div className="orbit-check-in-scanner__controls">
                         <input
                             type="text"
                             disabled={editorMode}
                             placeholder="Attendee code"
                             aria-label="Attendee code"
-                            style={{
-                                padding: '0.5rem 0.75rem',
-                                borderRadius: 'var(--orbit-radius-base)',
-                                border: 'var(--orbit-border-width) solid var(--orbit-color-border)',
-                            }}
+                            className="orbit-check-in-scanner__input"
                         />
                         <button type="button" disabled={editorMode} className="orbit-btn-primary">
                             Check in

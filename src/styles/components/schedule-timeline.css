@@ -1,0 +1,75 @@
+/*
+ * ScheduleTimeline.
+ * No .astro reference: docs/design-port.md is the authority. Each former inline
+ * size maps to the nearest token of the scale; the comments give the old value.
+ * Sessions stack in one full-width column at every width, so nothing scrolls sideways.
+ */
+
+/* Own vertical padding: .orbit-section no longer adds it (TASK-15.31). */
+.orbit-schedule-timeline {
+    box-sizing: border-box;
+    padding-block: var(--orbit-space-8);
+}
+
+/* padding 1.75rem: space-6 on narrow screens, space-8 from md. */
+.orbit-schedule-timeline__card {
+    box-sizing: border-box;
+    padding: var(--orbit-space-6);
+}
+
+/* flex justify-between, margin-bottom 1rem. Wraps when the timezone does not fit. */
+.orbit-schedule-timeline__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--orbit-space-2);
+    margin-bottom: var(--orbit-space-4);
+}
+
+/* font-size 1.25rem, font-weight 700 */
+.orbit-schedule-timeline__title {
+    margin: 0;
+    font-size: var(--orbit-font-size-xl);
+    line-height: var(--orbit-line-height-xl);
+    font-weight: var(--orbit-font-weight-bold);
+}
+
+/* font-size 0.75rem, opacity 0.75 */
+.orbit-schedule-timeline__timezone,
+.orbit-schedule-timeline__meta {
+    font-size: var(--orbit-font-size-xs);
+    line-height: var(--orbit-line-height-xs);
+    color: color-mix(in oklab, var(--orbit-color-text) 75%, transparent);
+}
+
+/* list-style none, margin 0, padding 0 */
+.orbit-schedule-timeline__list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+/* padding 0.75rem 0, full width, long words wrap instead of overflowing */
+.orbit-schedule-timeline__item {
+    box-sizing: border-box;
+    width: 100%;
+    padding-block: var(--orbit-space-3);
+    overflow-wrap: anywhere;
+}
+
+/* border-top on every session after the first */
+.orbit-schedule-timeline__item + .orbit-schedule-timeline__item {
+    border-top: var(--orbit-border-width) solid var(--orbit-color-border);
+}
+
+/* strong display block */
+.orbit-schedule-timeline__session {
+    display: block;
+}
+
+@media (min-width: 48rem) {
+    .orbit-schedule-timeline__card {
+        padding: var(--orbit-space-8);
+    }
+}

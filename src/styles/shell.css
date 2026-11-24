@@ -1,0 +1,108 @@
+/*
+ * Shared shell rules: document base, ThemeShell, layout primitives, buttons
+ * and the per-section Appearance alignment overrides (EPIC-14).
+ */
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    background-color: var(--orbit-color-background);
+    color: var(--orbit-color-text);
+    font-family: var(--orbit-font-body);
+}
+
+.orbit-theme-shell {
+    min-height: 100%;
+    background-color: var(--orbit-color-background);
+    color: var(--orbit-color-text);
+    font-family: var(--orbit-font-body);
+}
+
+.orbit-theme-shell a {
+    color: var(--orbit-color-accent);
+}
+
+.orbit-container {
+    width: 100%;
+    max-width: var(--orbit-container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+/*
+ * `.orbit-section` adds no default padding: each component owns its vertical
+ * padding, and SectionWrapper applies the Appearance padding inline.
+ */
+
+.orbit-heading {
+    font-family: var(--orbit-font-heading);
+    color: var(--orbit-color-text);
+}
+
+.orbit-card {
+    background-color: var(--orbit-color-surface);
+    color: var(--orbit-color-text);
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-lg);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+.orbit-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    background-color: var(--orbit-color-accent);
+    color: var(--orbit-color-background);
+    border: var(--orbit-border-width) solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-button);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.orbit-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    background-color: var(--orbit-color-surface);
+    color: var(--orbit-color-accent);
+    border: var(--orbit-border-width) solid var(--orbit-color-accent);
+    border-radius: var(--orbit-radius-button);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Per-section Appearance alignment overrides (EPIC-14 / Puck Appearance tab) */
+[data-orbit-align="left"],
+[data-orbit-align="left"] [data-orbit-block] {
+    text-align: left !important;
+}
+
+[data-orbit-align="left"] [data-orbit-block] {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+[data-orbit-align="center"],
+[data-orbit-align="center"] [data-orbit-block] {
+    text-align: center !important;
+}
+
+[data-orbit-align="center"] [data-orbit-block] {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+[data-orbit-align="right"],
+[data-orbit-align="right"] [data-orbit-block] {
+    text-align: right !important;
+}
+
+[data-orbit-align="right"] [data-orbit-block] {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}

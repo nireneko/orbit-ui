@@ -1,0 +1,186 @@
+/*
+ * HeroBanner: full-width accent band with a DAM background image.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/layout/HeroBanner.astro.
+ * The theme comes from the component's `siteTheme` prop (`.orbit-hero-banner--<theme>`):
+ * `clean` and `bold` put the image full-bleed behind the content, `editorial` and
+ * `clinical` (`--split`) put it in a second column from `md`.
+ */
+
+/* relative isolate flex min-h-[320px] w-full items-center overflow-hidden bg-hub-primary text-white */
+.orbit-hero-banner {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    min-height: 320px;
+    width: 100%;
+    align-items: center;
+    overflow: hidden;
+    background-color: var(--orbit-color-accent);
+    color: var(--orbit-color-on-accent);
+    box-sizing: border-box;
+}
+
+/* clinical: border-b border-hub-border */
+.orbit-hero-banner--clinical {
+    border-bottom: var(--orbit-border-width) solid var(--orbit-color-border);
+}
+
+/* bold: border-b-4 border-hub-border */
+.orbit-hero-banner--bold {
+    border-bottom: 4px solid var(--orbit-color-border);
+}
+
+/* image: object-cover; display: block replaces the missing preflight */
+.orbit-hero-banner__image {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* full-bleed image: absolute inset-0 -z-10 h-full w-full object-cover */
+.orbit-hero-banner__image--bleed {
+    position: absolute;
+    inset: 0;
+    z-index: -10;
+    height: 100%;
+}
+
+/* mx-auto w-full max-w-hub-container px-4 py-16 */
+.orbit-hero-banner__inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--orbit-container-max-width);
+    margin-inline: auto;
+    padding-inline: var(--orbit-space-4);
+    padding-block: var(--orbit-space-16);
+}
+
+/* stacked layout (clean, bold): flex flex-col gap-4 + alignment */
+.orbit-hero-banner:not(.orbit-hero-banner--split) .orbit-hero-banner__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--orbit-space-4);
+}
+
+/* split layout (editorial, clinical): grid items-center gap-8 md:grid-cols-2 */
+.orbit-hero-banner--split .orbit-hero-banner__inner {
+    display: grid;
+    align-items: center;
+    gap: var(--orbit-space-8);
+}
+
+/* content column: flex flex-col gap-4 + alignment */
+.orbit-hero-banner__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--orbit-space-4);
+}
+
+/* alignment: items-start text-left / items-center text-center / items-end text-right */
+.orbit-hero-banner--align-left .orbit-hero-banner__content,
+.orbit-hero-banner--align-left:not(.orbit-hero-banner--split) .orbit-hero-banner__inner {
+    align-items: flex-start;
+    text-align: left;
+}
+
+.orbit-hero-banner--align-center .orbit-hero-banner__content,
+.orbit-hero-banner--align-center:not(.orbit-hero-banner--split) .orbit-hero-banner__inner {
+    align-items: center;
+    text-align: center;
+}
+
+.orbit-hero-banner--align-right .orbit-hero-banner__content,
+.orbit-hero-banner--align-right:not(.orbit-hero-banner--split) .orbit-hero-banner__inner {
+    align-items: flex-end;
+    text-align: right;
+}
+
+/* bold tenant badge: inline-flex w-fit items-center rounded-hub-btn border border-hub-border
+   px-3 py-1 text-xs font-bold uppercase tracking-widest */
+.orbit-hero-banner__badge {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-button);
+    padding-inline: var(--orbit-space-3);
+    padding-block: var(--orbit-space-1);
+    font-size: var(--orbit-font-size-xs);
+    line-height: var(--orbit-line-height-xs);
+    font-weight: var(--orbit-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--orbit-letter-spacing-widest);
+}
+
+/* font-hub-heading text-4xl font-bold md:text-5xl */
+.orbit-hero-banner__title {
+    margin: 0;
+    font-family: var(--orbit-font-heading);
+    font-size: var(--orbit-font-size-4xl);
+    line-height: var(--orbit-line-height-4xl);
+    font-weight: var(--orbit-font-weight-bold);
+}
+
+/* max-w-2xl text-lg opacity-90 md:text-xl */
+.orbit-hero-banner__subtitle {
+    margin: 0;
+    max-width: var(--orbit-max-width-2xl);
+    font-size: var(--orbit-font-size-lg);
+    line-height: var(--orbit-line-height-lg);
+    opacity: 0.9;
+}
+
+/*
+ * CTA_CLASSES of the reference, applied over the shared `.orbit-cta` base.
+ * primary_button: rounded-hub-btn bg-hub-secondary px-6 py-3 font-semibold text-white no-underline hover:opacity-90
+ * secondary_button: rounded-hub-btn border border-hub-border px-6 py-3 font-semibold text-white no-underline
+ *                   hover:bg-hub-surface/15
+ * link: font-semibold text-hub-secondary underline (the shared base already matches it)
+ */
+.orbit-hero-banner .orbit-cta--primary {
+    padding-inline: var(--orbit-space-6);
+    padding-block: var(--orbit-space-3);
+    color: var(--orbit-color-on-accent);
+}
+
+.orbit-hero-banner .orbit-cta--secondary {
+    padding-inline: var(--orbit-space-6);
+    padding-block: var(--orbit-space-3);
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    color: var(--orbit-color-on-accent);
+}
+
+@media (hover: hover) {
+    .orbit-hero-banner .orbit-cta--secondary:hover {
+        background-color: color-mix(in oklab, var(--orbit-color-surface) 15%, transparent);
+    }
+}
+
+/* split image column: overflow-hidden rounded-hub-lg border border-hub-border shadow-hub-card */
+.orbit-hero-banner__media {
+    overflow: hidden;
+    border: var(--orbit-border-width) solid var(--orbit-color-border);
+    border-radius: var(--orbit-radius-lg);
+    box-shadow: var(--orbit-card-shadow);
+}
+
+/* split image: aspect-[16/10] w-full object-cover */
+.orbit-hero-banner__media .orbit-hero-banner__image {
+    aspect-ratio: 16 / 10;
+}
+
+@media (min-width: 48rem) {
+    .orbit-hero-banner--split .orbit-hero-banner__inner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .orbit-hero-banner__title {
+        font-size: var(--orbit-font-size-5xl);
+        line-height: var(--orbit-line-height-5xl);
+    }
+
+    .orbit-hero-banner__subtitle {
+        font-size: var(--orbit-font-size-xl);
+        line-height: var(--orbit-line-height-xl);
+    }
+}

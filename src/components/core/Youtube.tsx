@@ -1,6 +1,7 @@
 import React from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import { isRenderableContent, renderInlineDamTrigger } from './Header';
+import { isRenderableContent } from '../../internal/content';
+import { renderInlineDamTrigger } from '../../internal/InlineDamTrigger';
 
 export interface YoutubeComponentProps extends OrbitComponentContextProps {
     dam_asset_id?: string;
@@ -12,11 +13,26 @@ export interface YoutubeComponentProps extends OrbitComponentContextProps {
     allow_fullscreen?: boolean;
 }
 
+const BLOCK = 'orbit-youtube';
+const DEFAULT_IFRAME_TITLE = 'YouTube video';
+const DEFAULT_ASPECT_RATIO = '16:9';
+const ASPECT_RATIOS: Record<string, string> = {
+    '16:9': '16 / 9',
+    '4:3': '4 / 3',
+    '9:16': '9 / 16',
+};
+const VIDEO_DAM_TYPES = ['VIDEO_YOUTUBE'];
+const VIDEO_PROP_PATH = 'dam_asset_id';
+
+/**
+ * Embedded YouTube video resolved from a `VIDEO_YOUTUBE` DAM asset.
+ * Ported from orbit-hub-builder@86abe78:src/components/catalog/media/Youtube.astro.
+ */
 export function Youtube({
     dam_asset_id,
-    title = 'YouTube video',
+    title = DEFAULT_IFRAME_TITLE,
     caption,
-    aspect_ratio = '16:9',
+    aspect_ratio = DEFAULT_ASPECT_RATIO,
     start_seconds = 0,
     privacy_mode = true,
     allow_fullscreen = true,
@@ -42,66 +58,45 @@ export function Youtube({
     const embedUrl = resolvedVideoId
         ? `${domain}/embed/${encodeURIComponent(resolvedVideoId)}?start=${start_seconds}`
         : undefined;
-    const iframeTitle = typeof title === 'string' ? title : 'YouTube video';
+    const iframeTitle = (typeof title === 'string' ? title.trim() : '') || DEFAULT_IFRAME_TITLE;
+    const cssAspectRatio = ASPECT_RATIOS[aspect_ratio] ?? ASPECT_RATIOS[DEFAULT_ASPECT_RATIO];
     const inlineDamTrigger = renderInlineDamTrigger({
         editorMode,
-        propPath: 'dam_asset_id',
+        propPath: VIDEO_PROP_PATH,
         currentAssetId: dam_asset_id,
-        allowedDamTypes: ['VIDEO_YOUTUBE'],
+        allowedDamTypes: VIDEO_DAM_TYPES,
         label: selectAssetLabel,
         onInlineSelectDamAsset,
     });
     const showPlaceholder = editorMode && (!showMediaPreview || !embedUrl);
+    const iframeClassName = editorMode ? `${BLOCK}__iframe ${BLOCK}__iframe--inert` : `${BLOCK}__iframe`;
 
     return (
-        <figure
-            data-orbit-block="Youtube"
-            data-orbit-aspect-ratio={aspect_ratio}
-            className="orbit-container"
-            style={{ marginTop: 0, marginBottom: 0 }}
-        >
+        <figure data-orbit-block="Youtube" data-orbit-aspect-ratio={aspect_ratio} className={BLOCK}>
             {showPlaceholder ? (
-                <div
-                    className="orbit-card"
-                    style={{
-                        padding: '2.5rem',
-                        textAlign: 'center',
-                    }}
-                >
-                    <strong className="orbit-heading" style={{ display: 'block', marginBottom: '0.5rem' }}>
-                        {title}
-                    </strong>
-                    <span style={{ fontSize: '0.875rem', opacity: 0.75, display: 'block', marginBottom: '0.75rem' }}>
+                <div className={`orbit-card ${BLOCK}__placeholder`}>
+                    <strong className={`${BLOCK}__placeholder-title`}>{title}</strong>
+                    <span className={`${BLOCK}__placeholder-meta`}>
                         YouTube ({normalizedAssetId || '—'}) · {aspect_ratio}
                     </span>
                     {inlineDamTrigger}
                 </div>
             ) : (
-                <div>
-                    <iframe
-                        src={embedUrl}
-                        title={iframeTitle}
-                        allowFullScreen={allow_fullscreen}
-                        style={{
-                            width: '100%',
-                            aspectRatio: aspect_ratio.replace(':', ' / '),
-                            border: 'var(--orbit-border-width) solid var(--orbit-color-border)',
-                            borderRadius: 'var(--orbit-radius-lg)',
-                            pointerEvents: editorMode ? 'none' : undefined,
-                        }}
-                    />
-                    {editorMode && inlineDamTrigger && (
-                        <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>
-                            {inlineDamTrigger}
-                        </div>
-                    )}
-                </div>
+                <>
+                    <div className={`${BLOCK}__frame`} style={{ aspectRatio: cssAspectRatio }}>
+                        <iframe
+                            className={iframeClassName}
+                            src={embedUrl}
+                            title={iframeTitle}
+                            loading="lazy"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen={allow_fullscreen}
+                        />
+                    </div>
+                    {inlineDamTrigger && <div className={`${BLOCK}__dam-trigger`}>{inlineDamTrigger}</div>}
+                </>
             )}
-            {isRenderableContent(caption) && (
-                <figcaption style={{ marginTop: '0.5rem', fontSize: '0.875rem', opacity: 0.75 }}>
-                    {caption}
-                </figcaption>
-            )}
+            {isRenderableContent(caption) && <figcaption className={`${BLOCK}__caption`}>{caption}</figcaption>}
         </figure>
     );
 }
