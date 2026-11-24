@@ -25,41 +25,25 @@ export function ScheduleTimeline({
         <div
             data-orbit-block="ScheduleTimeline"
             data-orbit-timezone={safeTimezoneAttr}
-            className="orbit-container"
+            className="orbit-schedule-timeline orbit-container"
         >
-            <div className="orbit-card" style={{ padding: '1.75rem' }}>
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        marginBottom: '1rem',
-                    }}
-                >
-                    <h3 className="orbit-heading" style={{ fontSize: '1.25rem', fontWeight: 700 }}>
-                        Schedule Timeline
-                    </h3>
-                    <span style={{ fontSize: '0.75rem', opacity: 0.75 }}>{timezone}</span>
+            <div className="orbit-schedule-timeline__card orbit-card">
+                <div className="orbit-schedule-timeline__header">
+                    <h3 className="orbit-schedule-timeline__title orbit-heading">Schedule Timeline</h3>
+                    <span className="orbit-schedule-timeline__timezone">{timezone}</span>
                 </div>
 
-                <ol style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                <ol className="orbit-schedule-timeline__list">
                     {items.map((eventItem, idx) => (
                         <li
                             key={`evt-${idx}`}
-                            data-orbit-highlighted={
-                                highlight_current && idx === 0 ? 'true' : 'false'
-                            }
-                            style={{
-                                padding: '0.75rem 0',
-                                borderTop:
-                                    idx > 0
-                                        ? 'var(--orbit-border-width) solid var(--orbit-color-border)'
-                                        : undefined,
-                            }}
+                            data-orbit-highlighted={highlight_current && idx === 0 ? 'true' : 'false'}
+                            className="orbit-schedule-timeline__item"
                         >
-                            <strong style={{ display: 'block' }}>
+                            <strong className="orbit-schedule-timeline__session">
                                 {eventItem.title ?? 'Session'}
                             </strong>
-                            <span style={{ fontSize: '0.75rem', opacity: 0.75 }}>
+                            <span className="orbit-schedule-timeline__meta">
                                 {eventItem.starts_at ?? ''}
                                 {eventItem.location ? <> · {eventItem.location}</> : ''}
                             </span>
