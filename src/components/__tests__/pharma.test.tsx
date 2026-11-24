@@ -88,7 +88,7 @@ function declaration(rules: CssRule[], context: string, selector: string, proper
 function rootClassList(markup: string): string[] {
     const match = markup.match(/^<div[^>]*class="([^"]*)"/);
 
-    return match ? match[1].split(' ') : [];
+    return match ? (match[1] ?? '').split(' ') : [];
 }
 
 function expectTokenScaledSheet(sheet: string): void {

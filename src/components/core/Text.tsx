@@ -14,7 +14,7 @@ const TONES = ['default', 'muted', 'accent'] as const;
 
 function pickVariant<Variant extends string>(
     value: string,
-    variants: readonly Variant[],
+    variants: readonly [Variant, ...Variant[]],
 ): Variant {
     return (variants as readonly string[]).includes(value) ? (value as Variant) : variants[0];
 }

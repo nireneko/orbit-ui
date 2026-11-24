@@ -19,7 +19,7 @@ function render(props: Partial<ImageAndTextComponentProps> = {}): string {
 function rootClassList(markup: string): string[] {
     const match = markup.match(/^<div[^>]*class="([^"]*)"/);
 
-    return match ? match[1].split(' ') : [];
+    return match ? (match[1] ?? '').split(' ') : [];
 }
 
 describe('ImageAndText', () => {

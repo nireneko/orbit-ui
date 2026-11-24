@@ -59,7 +59,7 @@ const CASES: InteractiveCase[] = [
 function rootClassList(markup: string): string[] {
     const match = markup.match(/^<div[^>]*class="([^"]*)"/);
 
-    return match ? match[1].split(' ') : [];
+    return match ? (match[1] ?? '').split(' ') : [];
 }
 
 function stripComments(code: string): string {
@@ -108,7 +108,7 @@ describe('Interactive bundle', () => {
         it('has responsive rules that use only min-width breakpoints of the guide', () => {
             const css = stripComments(readFileSync(join(STYLES_DIR, stylesheet), 'utf8'));
             const widthQueries = [...css.matchAll(/@media\s*([^{]*)\{/g)]
-                .map((match) => match[1].trim())
+                .map((match) => (match[1] ?? '').trim())
                 .filter((query) => query.includes('width'));
 
             expect(widthQueries.length).toBeGreaterThan(0);

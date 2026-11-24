@@ -20,7 +20,7 @@ function frameTag(markup: string): string {
 }
 
 function styleAttributes(markup: string): string[] {
-    return [...markup.matchAll(/style="([^"]*)"/g)].map((match) => match[1]);
+    return [...markup.matchAll(/style="([^"]*)"/g)].map((match) => match[1] ?? '');
 }
 
 describe('Image', () => {
