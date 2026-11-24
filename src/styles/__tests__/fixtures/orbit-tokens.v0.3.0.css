@@ -137,10 +137,6 @@ body {
 }
 
 /* SiteTheme visual variants (CLEAN, EDITORIAL, CLINICAL, BOLD) */
-[data-orbit-theme="clean"] [data-orbit-block="HeroBanner"] {
-    border-top: 3px solid var(--orbit-color-accent);
-}
-
 [data-orbit-theme="editorial"] [data-orbit-block="Header"] {
     background-color: transparent;
     border-left: none;
@@ -148,16 +144,6 @@ body {
     border-top: none;
     border-bottom: 2px solid var(--orbit-color-text);
     border-radius: 0;
-}
-
-[data-orbit-theme="editorial"] [data-orbit-block="HeroBanner"] {
-    background-color: var(--orbit-color-surface);
-    border-left: 4px solid var(--orbit-color-accent);
-    border-top: 1px solid var(--orbit-color-border);
-    border-right: 1px solid var(--orbit-color-border);
-    border-bottom: 1px solid var(--orbit-color-border);
-    border-radius: 0;
-    box-shadow: none;
 }
 
 [data-orbit-theme="editorial"] .orbit-heading {
@@ -168,23 +154,8 @@ body {
     border-bottom: 2px solid var(--orbit-color-accent);
 }
 
-[data-orbit-theme="clinical"] [data-orbit-block="HeroBanner"] {
-    background-color: var(--orbit-color-surface);
-    border: 1px solid var(--orbit-color-border);
-    border-top: 4px solid var(--orbit-color-accent);
-    border-radius: var(--orbit-radius-lg);
-    box-shadow: var(--orbit-card-shadow);
-}
-
 [data-orbit-theme="bold"] [data-orbit-block="Header"] {
     border: 2px solid var(--orbit-color-accent);
-}
-
-[data-orbit-theme="bold"] [data-orbit-block="HeroBanner"] {
-    background-color: var(--orbit-color-surface);
-    border: 2px solid var(--orbit-color-accent);
-    border-radius: var(--orbit-radius-lg);
-    box-shadow: var(--orbit-card-shadow);
 }
 
 [data-orbit-theme="bold"] .orbit-heading {
