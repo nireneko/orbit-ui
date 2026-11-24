@@ -32,10 +32,10 @@ body {
     padding-right: 1.5rem;
 }
 
-.orbit-section {
-    padding-top: var(--orbit-section-spacing-y);
-    padding-bottom: var(--orbit-section-spacing-y);
-}
+/*
+ * `.orbit-section` adds no default padding: each component owns its vertical
+ * padding, and SectionWrapper applies the Appearance padding inline.
+ */
 
 .orbit-heading {
     font-family: var(--orbit-font-heading);

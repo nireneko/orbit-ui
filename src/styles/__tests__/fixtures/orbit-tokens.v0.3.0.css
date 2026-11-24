@@ -26,43 +26,6 @@
     --hub-font-heading: var(--orbit-font-heading);
 }
 
-[data-orbit-theme="clean"] {
-    --orbit-container-max-width: 72rem;
-    --orbit-section-spacing-y: 4rem;
-    --orbit-radius-base: 0.5rem;
-    --orbit-radius-lg: 0.75rem;
-    --orbit-radius-button: 0.5rem;
-    --orbit-border-width: 1px;
-}
-
-[data-orbit-theme="editorial"] {
-    --orbit-container-max-width: 68rem;
-    --orbit-section-spacing-y: 5.5rem;
-    --orbit-radius-base: 0.125rem;
-    --orbit-radius-lg: 0.25rem;
-    --orbit-radius-button: 0rem;
-    --orbit-border-width: 1px;
-    --orbit-card-shadow: none;
-}
-
-[data-orbit-theme="clinical"] {
-    --orbit-container-max-width: 76rem;
-    --orbit-section-spacing-y: 3.5rem;
-    --orbit-radius-base: 0.75rem;
-    --orbit-radius-lg: 1rem;
-    --orbit-radius-button: 9999px;
-    --orbit-border-width: 1px;
-}
-
-[data-orbit-theme="bold"] {
-    --orbit-container-max-width: 80rem;
-    --orbit-section-spacing-y: 5rem;
-    --orbit-radius-base: 1rem;
-    --orbit-radius-lg: 1.5rem;
-    --orbit-radius-button: 0.75rem;
-    --orbit-border-width: 2px;
-}
-
 html,
 body {
     margin: 0;
@@ -90,11 +53,6 @@ body {
     margin-right: auto;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-}
-
-.orbit-section {
-    padding-top: var(--orbit-section-spacing-y);
-    padding-bottom: var(--orbit-section-spacing-y);
 }
 
 .orbit-heading {
