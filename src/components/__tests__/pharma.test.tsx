@@ -10,6 +10,11 @@ import {
     type ClinicalStudyCardGridComponentProps,
     type ClinicalStudyItem,
 } from '../pharma/ClinicalStudyCardGrid';
+import {
+    MedicalInquiryForm,
+    type MedicalInquiryFieldItem,
+    type MedicalInquiryFormComponentProps,
+} from '../pharma/MedicalInquiryForm';
 
 /**
  * TASK-15.32: the Pharma bundle components on the token contract of docs/design-port.md.
@@ -237,6 +242,148 @@ describe('ClinicalStudyCardGrid', () => {
             const focus = readRules(SHEET).find((rule) => rule.selector.endsWith(`.${BLOCK}__action:focus-visible`));
 
             expect(focus?.declarations.outline).toBeDefined();
+        });
+
+        it('uses only token-scale sizes and the guide breakpoints', () => {
+            expectTokenScaledSheet(SHEET);
+            expectOnlyGuideBreakpoints(SHEET);
+        });
+    });
+});
+
+describe('MedicalInquiryForm', () => {
+    const BLOCK = 'orbit-medical-inquiry-form';
+    const FIELDS: MedicalInquiryFieldItem[] = [
+        { name: 'fullname', label: 'Full name', type: 'text', required: true },
+        { name: 'email', label: 'Email', type: 'email', required: true },
+        { name: 'collegiate_number', label: 'Collegiate number', type: 'number' },
+        { name: 'message', label: 'Message', type: 'textarea', required: true },
+    ];
+    const SCHEMA_PROPS: MedicalInquiryFormComponentProps = {
+        inquiry_type: 'ADVERSE_EVENT',
+        submit_endpoint: 'https://inquiries.example.test/submit',
+        pharmacovigilance_banner: {
+            show_mandatory_warning: true,
+            text: 'Report any adverse event to the pharmacovigilance unit.',
+        },
+        fields: FIELDS,
+    };
+
+    function render(props: Partial<MedicalInquiryFormComponentProps> = {}): string {
+        return renderToStaticMarkup(<MedicalInquiryForm {...SCHEMA_PROPS} {...props} />);
+    }
+
+    describe('markup', () => {
+        it('renders a div root with its block class and keeps the data attributes', () => {
+            const markup = render();
+
+            expect(markup.startsWith('<div')).toBe(true);
+            expect(rootClassList(markup)).toContain(BLOCK);
+            expect(markup).toContain('data-orbit-block="MedicalInquiryForm"');
+            expect(markup).toContain('data-orbit-inquiry-type="ADVERSE_EVENT"');
+            expect(markup).toContain(`<div class="${BLOCK}__inner"><div class="${BLOCK}__card">`);
+        });
+
+        it('shows the pharmacovigilance banner only when the warning is mandatory', () => {
+            expect(render()).toContain(
+                `<div role="note" class="${BLOCK}__banner">Report any adverse event to the pharmacovigilance unit.</div>`,
+            );
+            expect(
+                render({ pharmacovigilance_banner: { show_mandatory_warning: false, text: 'Hidden banner text' } }),
+            ).not.toContain('Hidden banner text');
+        });
+
+        it('submits to submit_endpoint with a submit button', () => {
+            const markup = render();
+
+            expect(markup).toContain(`<form class="${BLOCK}__form" action="https://inquiries.example.test/submit">`);
+            expect(markup).toContain(`<button type="submit" class="${BLOCK}__submit">Submit inquiry</button>`);
+        });
+
+        it('has no inline styles and no shell button, card or container classes', () => {
+            const markup = render();
+
+            expect(markup).not.toContain('style=');
+            expect(markup).not.toContain('orbit-btn-');
+            expect(markup).not.toContain('orbit-card');
+            expect(markup).not.toContain('orbit-container');
+        });
+
+        it('renders the same markup on every render, without browser state', () => {
+            expect(render()).toBe(render());
+        });
+    });
+
+    describe('fields', () => {
+        it('associates every control with its label', () => {
+            const markup = render();
+            const labels = [...markup.matchAll(/<label for="([^"]+)" class="[^"]*">/g)].map((match) => match[1]);
+            const controls = [...markup.matchAll(/<(?:input|textarea) id="([^"]+)"/g)].map((match) => match[1]);
+
+            expect(labels).toEqual([
+                'med-inquiry-fullname',
+                'med-inquiry-email',
+                'med-inquiry-collegiate_number',
+                'med-inquiry-message',
+            ]);
+            expect(controls).toEqual(labels);
+        });
+
+        it('renders each field type, the required marker and the required attribute', () => {
+            const markup = render();
+
+            expect(markup).toContain(
+                `<div class="${BLOCK}__field"><label for="med-inquiry-fullname" class="${BLOCK}__label">Full name *</label>`,
+            );
+            // React 19 serialises the `name` of an input after its other attributes.
+            expect(markup).toContain(
+                `<input id="med-inquiry-fullname" type="text" required="" class="${BLOCK}__control" name="fullname"/>`,
+            );
+            expect(markup).toContain(
+                `<input id="med-inquiry-email" type="email" required="" class="${BLOCK}__control" name="email"/>`,
+            );
+            expect(markup).toContain(
+                `<input id="med-inquiry-collegiate_number" type="number" class="${BLOCK}__control" name="collegiate_number"/>`,
+            );
+            expect(markup).toContain(`<label for="med-inquiry-collegiate_number" class="${BLOCK}__label">Collegiate number</label>`);
+            expect(markup).toContain(
+                `<textarea id="med-inquiry-message" name="message" required="" rows="3" class="${BLOCK}__control ${BLOCK}__control--textarea"></textarea>`,
+            );
+        });
+    });
+
+    describe('editorMode', () => {
+        it('disables the controls and never submits', () => {
+            const markup = render({ editorMode: true });
+
+            expect(markup).not.toContain('action=');
+            expect(markup.match(/disabled=""/g)).toHaveLength(FIELDS.length + 1);
+            expect(markup).toContain('data-orbit-block="MedicalInquiryForm"');
+        });
+    });
+
+    describe('stylesheet', () => {
+        const SHEET = 'medical-inquiry-form.css';
+
+        it('owns its vertical padding and widens the card padding from 48rem', () => {
+            const rules = readRules(SHEET);
+
+            expect(declaration(rules, '', `.${BLOCK}`, 'padding-block')).toMatch(/^var\(--orbit-space-/);
+            expect(declaration(rules, '', `.${BLOCK}__card`, 'padding')).toBe('var(--orbit-space-6)');
+            expect(declaration(rules, '@media (min-width: 48rem)', `.${BLOCK}__card`, 'padding')).toBe(
+                'var(--orbit-space-8)',
+            );
+        });
+
+        it('gives the controls and the submit button a visible focus outline', () => {
+            const rules = readRules(SHEET);
+
+            expect(declaration(rules, '', `.${BLOCK}__control:focus-visible`, 'outline')).toBeDefined();
+            expect(declaration(rules, '', `.${BLOCK}__submit:focus-visible`, 'outline')).toBeDefined();
+        });
+
+        it('colours the submit text with the on-accent token', () => {
+            expect(declaration(readRules(SHEET), '', `.${BLOCK}__submit`, 'color')).toBe('var(--orbit-color-on-accent)');
         });
 
         it('uses only token-scale sizes and the guide breakpoints', () => {
