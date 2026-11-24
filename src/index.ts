@@ -3,14 +3,10 @@ export {
     type DocumentDownloadCenterComponentProps,
     type DocumentDownloadItem,
 } from './components/core/DocumentDownloadCenter';
-export {
-    type CtaProps,
-    Header,
-    type HeaderComponentProps,
-    renderCtaButton,
-    renderInlineDamTrigger,
-    resolveDamAssetUrl,
-} from './components/core/Header';
+export { Header, type HeaderComponentProps } from './components/core/Header';
+export { type CtaProps, renderCtaButton } from './internal/cta';
+export { resolveDamAssetUrl } from './internal/dam';
+export { renderInlineDamTrigger } from './internal/InlineDamTrigger';
 export { HeroBanner, type HeroBannerComponentProps } from './components/core/HeroBanner';
 export { Image, type ImageComponentProps } from './components/core/Image';
 export {

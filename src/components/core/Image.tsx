@@ -1,10 +1,8 @@
 import React from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import {
-    isRenderableContent,
-    renderInlineDamTrigger,
-    resolveDamAssetUrl,
-} from './Header';
+import { isRenderableContent } from '../../internal/content';
+import { resolveDamAssetUrl } from '../../internal/dam';
+import { renderInlineDamTrigger } from '../../internal/InlineDamTrigger';
 
 export interface ImageComponentProps extends OrbitComponentContextProps {
     dam_asset_id?: string;
