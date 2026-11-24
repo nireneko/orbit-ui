@@ -1,11 +1,8 @@
 import React from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import {
-    type CtaProps,
-    renderCtaButton,
-    renderInlineDamTrigger,
-    resolveDamAssetUrl,
-} from './Header';
+import { type CtaProps, renderCtaButton } from '../../internal/cta';
+import { resolveDamAssetUrl } from '../../internal/dam';
+import { renderInlineDamTrigger } from '../../internal/InlineDamTrigger';
 
 export interface ImageAndTextComponentProps extends OrbitComponentContextProps {
     dam_asset_id?: string;

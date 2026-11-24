@@ -1,12 +1,9 @@
 import React from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import {
-    type CtaProps,
-    isRenderableContent,
-    renderCtaButton,
-    renderInlineDamTrigger,
-    resolveDamAssetUrl,
-} from './Header';
+import { isRenderableContent } from '../../internal/content';
+import { type CtaProps, renderCtaButton } from '../../internal/cta';
+import { resolveDamAssetUrl } from '../../internal/dam';
+import { renderInlineDamTrigger } from '../../internal/InlineDamTrigger';
 
 export interface HeroBannerComponentProps extends OrbitComponentContextProps {
     title?: React.ReactNode;

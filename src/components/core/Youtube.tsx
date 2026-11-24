@@ -1,6 +1,7 @@
 import React from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import { isRenderableContent, renderInlineDamTrigger } from './Header';
+import { isRenderableContent } from '../../internal/content';
+import { renderInlineDamTrigger } from '../../internal/InlineDamTrigger';
 
 export interface YoutubeComponentProps extends OrbitComponentContextProps {
     dam_asset_id?: string;

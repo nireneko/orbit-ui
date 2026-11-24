@@ -1,6 +1,7 @@
 import React from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import { renderInlineDamTrigger, resolveDamAssetUrl } from './Header';
+import { resolveDamAssetUrl } from '../../internal/dam';
+import { renderInlineDamTrigger } from '../../internal/InlineDamTrigger';
 
 export interface DocumentDownloadItem {
     dam_asset_id?: string;

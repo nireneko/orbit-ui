@@ -1,6 +1,6 @@
 import React from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import { isRenderableContent } from './Header';
+import { isRenderableContent } from '../../internal/content';
 
 export interface TextComponentProps extends OrbitComponentContextProps {
     heading?: React.ReactNode;

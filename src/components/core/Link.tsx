@@ -1,6 +1,6 @@
 import React from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import { renderCtaButton } from './Header';
+import { renderCtaButton } from '../../internal/cta';
 
 export interface LinkComponentProps extends OrbitComponentContextProps {
     label?: React.ReactNode;
