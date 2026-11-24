@@ -34,7 +34,7 @@ function frameTag(markup: string): string {
 }
 
 function inlineStyles(markup: string): string[] {
-    return Array.from(markup.matchAll(/style="([^"]*)"/g), (match) => match[1]);
+    return Array.from(markup.matchAll(/style="([^"]*)"/g), (match) => match[1] ?? '');
 }
 
 describe('Youtube', () => {

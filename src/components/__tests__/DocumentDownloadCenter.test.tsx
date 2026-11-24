@@ -28,7 +28,7 @@ function render(props: Partial<DocumentDownloadCenterComponentProps> = {}): stri
 function rootClassList(markup: string): string[] {
     const match = markup.match(/^<div[^>]*class="([^"]*)"/);
 
-    return match ? match[1].split(' ') : [];
+    return match ? (match[1] ?? '').split(' ') : [];
 }
 
 const noop = (): void => undefined;

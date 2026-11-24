@@ -2,6 +2,13 @@
 
 All notable changes to `@orbit/ui` are recorded here. Versions follow [Semantic Versioning](https://semver.org/); prereleases carry an `-rc.N` suffix and are tagged on the integration branch before the final release is tagged on `main`.
 
+## [0.4.0-rc.2]
+
+### Fixed
+
+- `Text` type-checks under `noUncheckedIndexedAccess`. The package ships TypeScript source, so a consumer whose `tsconfig.json` enables that flag (the Astro builder does) compiled `Text.tsx` with it and failed its typecheck; `skipLibCheck` does not cover `.ts` files. The package now type-checks with the flag itself, so such errors fail its own build.
+- Install from `#v0.4.0-rc.2`; everything else in 0.4.0-rc.1 applies unchanged.
+
 ## [0.4.0-rc.1]
 
 First prerelease of EPIC-15 phase 2 (one render engine): the reference design from the legacy Astro components is ported into every catalog component. Markup, class names and styles change; the public JavaScript API stays compatible with v0.3.0.
@@ -48,6 +55,7 @@ First prerelease of EPIC-15 phase 2 (one render engine): the reference design fr
 
 - The `orbit-tokens.v0.3.0.css` test fixture is no longer a literal v0.3.0 snapshot: rules that this release changes on purpose (Header and HeroBanner theme rules, theme blocks, `.orbit-section` padding) were removed from it. ([#19], [#20], [#27])
 
+[0.4.0-rc.2]: https://github.com/nireneko/orbit-ui/compare/v0.4.0-rc.1...v0.4.0-rc.2
 [0.4.0-rc.1]: https://github.com/nireneko/orbit-ui/compare/v0.3.0...v0.4.0-rc.1
 [#16]: https://github.com/nireneko/orbit-ui/pull/16
 [#17]: https://github.com/nireneko/orbit-ui/pull/17
