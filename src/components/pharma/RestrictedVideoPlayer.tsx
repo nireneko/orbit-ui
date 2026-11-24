@@ -1,6 +1,6 @@
 import React from 'react';
 import type { OrbitComponentContextProps } from '../../types';
-import { isRenderableContent } from '../core/Header';
+import { isRenderableContent } from '../../internal/content';
 
 export interface RestrictedVideoPlayerComponentProps extends OrbitComponentContextProps {
     provider?: string;
