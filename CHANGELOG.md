@@ -37,7 +37,7 @@ First prerelease of EPIC-15 phase 2 (one render engine): the reference design fr
   - Image: `href` and `open_in_new_tab` are now honoured; `aspect_ratio` `16:9|4:3|1:1|3:4|auto`. ([#23])
   - DocumentDownloadCenter: list layout with format and size metadata; links use `download_url` when present, otherwise the DAM URL. ([#24])
   - Youtube: `<figure>` layout, `loading="lazy"` and a strict referrer policy; embed logic unchanged. ([#25])
-  - InteractiveSlideshow: scroll-snap track with previous/next buttons, carousel ARIA labels; autoplay off in editor mode and for a single slide, paused on hover and focus. ([#26])
+  - InteractiveSlideshow: scroll-snap track with previous/next buttons, carousel ARIA labels; autoplay off in editor mode and for a single slide, stops for good on the first hover or focus. ([#26])
 - **Interactive bundle** (CheckInScanner, ScheduleTimeline, UserFavoriteTracker) moved onto tokens and breakpoints with no inline styles; props and behaviour unchanged. ([#28])
 - **Pharma bundle** moved onto tokens with no inline styles; props and behaviour unchanged:
   - ClinicalStudyCardGrid: responsive grid (1 column, 2 from `48rem`, `columns` 2/3/4 from `64rem`; out-of-range falls back to 3). ([#29])
