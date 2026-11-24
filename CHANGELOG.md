@@ -2,6 +2,18 @@
 
 All notable changes to `@orbit/ui` are recorded here. Versions follow [Semantic Versioning](https://semver.org/); prereleases carry an `-rc.N` suffix and are tagged on the integration branch before the final release is tagged on `main`.
 
+## [0.4.0-rc.3]
+
+Install from `#v0.4.0-rc.3`; everything else in 0.4.0-rc.1 and rc.2 applies unchanged.
+
+### Fixed
+
+- Primary CTA label: inside `ThemeShell` the shell link rule (`.orbit-theme-shell a`) painted it in the accent colour, so the label was invisible on the accent background. It now uses `--orbit-color-on-accent` (it used `--orbit-color-background`) with enough specificity to win inside the shell: the rule is now `.orbit-cta.orbit-cta--primary` (0,2,0), so a host or component override of the primary label colour needs two classes.
+- CTA hover effects apply only under `@media (hover: hover)`, so touch devices no longer keep a stuck hover state; the secondary hover tint mixes in `oklab`, as the reference does.
+- Header submenu links keep the muted text colour inside `ThemeShell` instead of the accent colour.
+
+Found by the parity verification against the legacy `.astro` catalog (TASK-15.43).
+
 ## [0.4.0-rc.2]
 
 ### Fixed
@@ -55,6 +67,7 @@ First prerelease of EPIC-15 phase 2 (one render engine): the reference design fr
 
 - The `orbit-tokens.v0.3.0.css` test fixture is no longer a literal v0.3.0 snapshot: rules that this release changes on purpose (Header and HeroBanner theme rules, theme blocks, `.orbit-section` padding) were removed from it. ([#19], [#20], [#27])
 
+[0.4.0-rc.3]: https://github.com/nireneko/orbit-ui/compare/v0.4.0-rc.2...v0.4.0-rc.3
 [0.4.0-rc.2]: https://github.com/nireneko/orbit-ui/compare/v0.4.0-rc.1...v0.4.0-rc.2
 [0.4.0-rc.1]: https://github.com/nireneko/orbit-ui/compare/v0.3.0...v0.4.0-rc.1
 [#16]: https://github.com/nireneko/orbit-ui/pull/16

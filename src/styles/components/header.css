@@ -89,8 +89,11 @@
     margin-block-end: var(--orbit-space-1);
 }
 
-/* text-sm text-hub-text/75 no-underline */
-.orbit-header__submenu-link {
+/*
+ * text-sm text-hub-text/75 no-underline. Scoped to the submenu so the muted colour
+ * outranks `.orbit-theme-shell a` in shell.css.
+ */
+.orbit-header__submenu .orbit-header__submenu-link {
     font-size: var(--orbit-font-size-sm);
     line-height: var(--orbit-line-height-sm);
     color: color-mix(in oklab, var(--orbit-color-text) 75%, transparent);

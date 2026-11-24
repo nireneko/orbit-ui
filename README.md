@@ -11,7 +11,7 @@ Install pinned to a release tag via Git, then import the stylesheet once in the 
 ```json
 {
   "dependencies": {
-    "@orbit/ui": "https://github.com/nireneko/orbit-ui.git#v0.4.0-rc.2"
+    "@orbit/ui": "https://github.com/nireneko/orbit-ui.git#v0.4.0-rc.3"
   }
 }
 ```

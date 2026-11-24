@@ -1,4 +1,7 @@
 // @vitest-environment node
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -14,6 +17,36 @@ const MINIMAL_SCHEMA_PROPS: ImageAndTextComponentProps = {
 
 function render(props: Partial<ImageAndTextComponentProps> = {}): string {
     return renderToStaticMarkup(<ImageAndText {...MINIMAL_SCHEMA_PROPS} {...props} />);
+}
+
+/** The shared CTA stylesheet: ImageAndText adds no colour of its own to `.orbit-cta`. */
+const CTA_CSS = readFileSync(
+    resolve(dirname(fileURLToPath(import.meta.url)), '../../styles/components/cta.css'),
+    'utf8',
+);
+
+/** Top-level rules of a flat stylesheet, comments removed, with the `@media` block each sits in. */
+function cssRules(css: string): Array<{ media: string | null; selector: string; body: string }> {
+    const rules: Array<{ media: string | null; selector: string; body: string }> = [];
+    const source = css.replace(/\/\*[\s\S]*?\*\//g, '');
+    const blocks = source.matchAll(/(@media[^{]+)\{((?:[^{}]*\{[^}]*\})*)\s*\}|([^{}@]+)\{([^}]*)\}/g);
+
+    for (const [, media, inner, selector, body] of blocks) {
+        if (media !== undefined) {
+            for (const [, nestedSelector, nestedBody] of (inner ?? '').matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+                rules.push({ media: media.trim(), selector: (nestedSelector ?? '').trim(), body: nestedBody ?? '' });
+            }
+        } else {
+            rules.push({ media: null, selector: (selector ?? '').trim(), body: body ?? '' });
+        }
+    }
+
+    return rules;
+}
+
+/** Class, attribute and pseudo-class count of a simple selector (no ids in these stylesheets). */
+function classSpecificity(selector: string): number {
+    return (selector.match(/\.[\w-]+|\[[^\]]+\]|:(?!:)[\w-]+/g) ?? []).length;
 }
 
 function rootClassList(markup: string): string[] {
@@ -124,6 +157,33 @@ describe('ImageAndText', () => {
             const markup = render({ cta: { label: 'Read the study', href: '/studies', variant } });
 
             expect(markup).toContain(`<a href="/studies" class="${className}">Read the study</a>`);
+        });
+
+        it('TASK-15.43: gives the primary CTA the on-accent label colour of the reference, over `.orbit-theme-shell a`', () => {
+            const colourRules = cssRules(CTA_CSS).filter(
+                ({ selector, body }) => selector.includes('orbit-cta--primary') && /(^|;|\s)color:/.test(body),
+            );
+
+            expect(colourRules.length).toBeGreaterThan(0);
+            for (const { selector, body } of colourRules) {
+                // text-white on bg-hub-primary in the reference.
+                expect(body).toContain('color: var(--orbit-color-on-accent);');
+                // `.orbit-theme-shell a` (shell.css) is (0,1,1); the label colour must outrank it.
+                expect(classSpecificity(selector)).toBeGreaterThanOrEqual(2);
+            }
+        });
+
+        it('TASK-15.43: applies the CTA hover states only on hover-capable devices, mixing colours in oklab', () => {
+            const hoverRules = cssRules(CTA_CSS).filter(({ selector }) => selector.includes(':hover'));
+
+            expect(hoverRules.length).toBeGreaterThan(0);
+            for (const { media } of hoverRules) {
+                expect(media).toBe('@media (hover: hover)');
+            }
+            expect(CTA_CSS).not.toContain('in srgb');
+            expect(CTA_CSS).toContain(
+                'background-color: color-mix(in oklab, var(--orbit-color-accent) 5%, transparent);',
+            );
         });
 
         it('resolves the href through resolveLink and applies its target and rel', () => {

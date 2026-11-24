@@ -20,12 +20,15 @@
     padding: 0.625rem 1.25rem;
     border-radius: var(--orbit-radius-button);
     background-color: var(--orbit-color-accent);
-    color: var(--orbit-color-background);
     text-decoration: none;
 }
 
-.orbit-cta--primary:hover {
-    opacity: 0.9;
+/*
+ * text-white on the accent background maps to --orbit-color-on-accent. Two classes so the
+ * label outranks `.orbit-theme-shell a` (shell.css), which would paint it in the accent colour.
+ */
+.orbit-cta.orbit-cta--primary {
+    color: var(--orbit-color-on-accent);
 }
 
 .orbit-cta--secondary {
@@ -36,15 +39,24 @@
     text-decoration: none;
 }
 
-.orbit-cta--secondary:hover {
-    background-color: color-mix(in srgb, var(--orbit-color-accent) 5%, transparent);
-}
-
 .orbit-cta--link {
     color: var(--orbit-color-accent);
     text-decoration: underline;
 }
 
-.orbit-cta--link:hover {
-    opacity: 0.8;
+@media (hover: hover) {
+    /* primary_button: hover:opacity-90 */
+    .orbit-cta--primary:hover {
+        opacity: 0.9;
+    }
+
+    /* secondary_button: hover:bg-hub-primary/5 */
+    .orbit-cta--secondary:hover {
+        background-color: color-mix(in oklab, var(--orbit-color-accent) 5%, transparent);
+    }
+
+    /* link: hover:opacity-80 */
+    .orbit-cta--link:hover {
+        opacity: 0.8;
+    }
 }

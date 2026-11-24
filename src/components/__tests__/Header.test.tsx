@@ -201,4 +201,24 @@ describe('Header', () => {
         expect(css).not.toMatch(/@media[^{]*width/);
         expect(css).not.toContain('[data-orbit-theme');
     });
+
+    it('TASK-15.43: keeps the muted submenu link colour inside ThemeShell, over `.orbit-theme-shell a`', () => {
+        const css = readFileSync(HEADER_CSS, 'utf8');
+        const mutedColour = 'color: color-mix(in oklab, var(--orbit-color-text) 75%, transparent);';
+        const rule = [...css.matchAll(/([^{}]+)\{([^}]*)\}/g)].find(
+            ([, selector, body]) => selector?.includes('orbit-header__submenu-link') && body?.includes(mutedColour),
+        );
+
+        expect(rule).toBeDefined();
+        // `.orbit-theme-shell a` (shell.css) is (0,1,1); the muted colour must outrank it.
+        expect(classSpecificity(rule?.[1] ?? '')).toBeGreaterThanOrEqual(2);
+    });
 });
+
+/** Class, attribute and pseudo-class count of a simple selector (no ids in these stylesheets). */
+function classSpecificity(selector: string): number {
+    const lastComment = selector.lastIndexOf('*/');
+    const cleanSelector = lastComment === -1 ? selector : selector.slice(lastComment + 2);
+
+    return (cleanSelector.match(/\.[\w-]+|\[[^\]]+\]|:(?!:)[\w-]+/g) ?? []).length;
+}
